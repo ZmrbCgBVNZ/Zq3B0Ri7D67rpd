@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>岡山五天四夜</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Zen Maru Gothic',sans-serif;background:#F5F6FA;color:#2d3a4a;min-height:100vh;padding-bottom:80px}
+:root{--fuji:#3B6FA0;--snow:#FFFFFF;--warm-gray:#B8B0A8;--light-blue:#E8F0F8;--accent:#F4A261;--guide:#2D6A4F;--guide-light:#E8F5EE}
+body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background-image:radial-gradient(circle at 20% 20%,rgba(59,111,160,.06) 0,transparent 50%),radial-gradient(circle at 80% 80%,rgba(176,160,168,.08) 0,transparent 50%);pointer-events:none;z-index:0}
+
+/* GUIDE MODE OVERLAY */
+body.guide-mode::before{background-image:radial-gradient(circle at 20% 20%,rgba(45,106,79,.08) 0,transparent 50%),radial-gradient(circle at 80% 80%,rgba(45,106,79,.06) 0,transparent 50%)}
+body.guide-mode{background:#F0F5F2}
+
+.header{background:linear-gradient(135deg,#3B6FA0 0%,#5B8FC0 100%);color:#fff;padding:20px 16px 16px;text-align:center;position:relative;z-index:1;border-radius:0 0 24px 24px;box-shadow:0 4px 20px rgba(59,111,160,.3);transition:.4s}
+body.guide-mode .header{background:linear-gradient(135deg,#2D6A4F 0%,#52B788 100%);box-shadow:0 4px 20px rgba(45,106,79,.3)}
+.header-icon{font-size:28px;margin-bottom:4px;cursor:pointer;display:inline-block;user-select:none;transition:transform .1s}
+.header-icon:active{transform:scale(1.3)}
+.header h1{font-size:20px;font-weight:700;letter-spacing:.5px}
+.header .subtitle{font-size:13px;opacity:.85;margin-top:4px}
+.header .dates{display:inline-block;background:rgba(255,255,255,.2);border-radius:20px;padding:4px 14px;font-size:12px;margin-top:8px}
+.mode-badge{display:inline-block;background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.4);border-radius:20px;padding:3px 12px;font-size:11px;margin-top:6px;font-weight:700;letter-spacing:.5px}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:20px;padding:24px;margin:20px;max-width:320px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-icon{font-size:40px;margin-bottom:12px}
+.modal-title{font-size:17px;font-weight:700;color:#2d3a4a;margin-bottom:8px}
+.modal-desc{font-size:13px;color:#777;line-height:1.6;margin-bottom:20px}
+.modal-btns{display:flex;gap:10px}
+.modal-btn{flex:1;padding:12px;border-radius:12px;border:none;font-family:'Zen Maru Gothic',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:.2s}
+.modal-btn.confirm{background:#2D6A4F;color:#fff}
+.modal-btn.confirm.to-family{background:var(--fuji)}
+.modal-btn.cancel{background:#f0f2f4;color:#666}
+
+.tab-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e8eaed;display:flex;z-index:100;box-shadow:0 -4px 20px rgba(0,0,0,.08);border-radius:20px 20px 0 0;transition:.3s}
+body.guide-mode .tab-bar{border-top:2px solid #52B788}
+.tab-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 0 12px;cursor:pointer;transition:.2s;color:#999;font-size:11px;gap:3px}
+.tab-item.active{color:var(--fuji)}
+body.guide-mode .tab-item.active{color:var(--guide)}
+.tab-item .tab-icon{font-size:22px}
+
+.content{position:relative;z-index:1;padding:16px}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+.day-selector{display:flex;gap:8px;overflow-x:auto;padding:4px 0 12px;scrollbar-width:none}
+.day-selector::-webkit-scrollbar{display:none}
+.day-btn{flex-shrink:0;background:#fff;border:2px solid #e0e4ea;border-radius:20px;padding:8px 16px;font-family:'Zen Maru Gothic',sans-serif;font-size:13px;cursor:pointer;transition:.2s;color:#666;white-space:nowrap;line-height:1.4}
+.day-btn.active{background:var(--fuji);border-color:var(--fuji);color:#fff;font-weight:700}
+body.guide-mode .day-btn.active{background:var(--guide);border-color:var(--guide)}
+
+.day-panel{display:none}
+.day-panel.active{display:block}
+
+.day-header{background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:12px;border:1.5px solid var(--light-blue);display:flex;align-items:center;gap:12px}
+.day-badge{background:var(--fuji);color:#fff;border-radius:50%;width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;line-height:1.2;text-align:center;transition:.3s}
+body.guide-mode .day-badge{background:var(--guide)}
+.day-info h2{font-size:16px;color:var(--fuji);font-weight:700;transition:.3s}
+body.guide-mode .day-info h2{color:var(--guide)}
+.day-info p{font-size:12px;color:#888;margin-top:2px}
+
+.timeline-item{display:flex;gap:10px;margin-bottom:12px}
+.time-col{flex-shrink:0;width:56px;display:flex;flex-direction:column;align-items:center;padding-top:14px}
+.time-badge{background:var(--light-blue);color:var(--fuji);border-radius:8px;padding:3px 5px;font-size:10px;font-weight:700;text-align:center;line-height:1.4;white-space:nowrap;transition:.3s}
+body.guide-mode .time-badge{background:#E8F5EE;color:var(--guide)}
+.time-line{flex:1;width:2px;background:#dce8f4;margin-top:6px;border-radius:2px}
+.timeline-item:last-child .time-line{display:none}
+
+.spot-card{background:#fff;border-radius:16px;padding:14px;flex:1;border:1.5px solid #eef0f4;position:relative;overflow:hidden;min-width:0}
+.spot-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px 0 0 4px}
+.spot-card.type-food::before{background:#F4A261}
+.spot-card.type-sight::before{background:#3B6FA0}
+.spot-card.type-shop::before{background:#E07C8A}
+.spot-card.type-activity::before{background:#5B8A5A}
+.spot-card.type-hotel::before{background:#7B6CA8}
+.spot-card.type-transport::before{background:#B8B0A8}
+
+.spot-header{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;padding-left:8px;flex-wrap:wrap}
+.cat-badge{font-size:10px;font-weight:700;border-radius:10px;padding:3px 10px;flex-shrink:0;margin-top:2px}
+.cat-food{background:#FFF0E6;color:#C06020}
+.cat-sight{background:#E8F0F8;color:#1a5080}
+.cat-shop{background:#FCEEF0;color:#B04060}
+.cat-activity{background:#EAF3EA;color:#2A6030}
+.cat-hotel{background:#F0EEF8;color:#5040A0}
+.cat-transport{background:#F0EEF0;color:#606060}
+
+.spot-name{font-size:15px;font-weight:700;color:#2d3a4a;line-height:1.3;flex:1}
+.spot-desc{font-size:12px;color:#777;margin-top:4px;line-height:1.5;padding-left:8px}
+
+/* GUIDE NOTE BUTTON */
+.guide-note-btn{width:28px;height:28px;border-radius:8px;background:#E8F5EE;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;transition:.2s;margin-top:1px}
+.guide-note-btn:hover{background:#D0EDD8}
+body.guide-mode .guide-note-btn{display:flex}
+.guide-note-btn.active{background:#2D6A4F;color:#fff}
+
+/* GUIDE NOTE PANEL */
+.guide-note-panel{display:none;margin:10px 0 0 8px;border-radius:12px;overflow:hidden;border:1.5px solid #B7E4C7}
+.guide-note-panel.open{display:block}
+.guide-note-inner{background:#F0FAF4;padding:12px}
+.guide-note-text{font-size:12px;color:#2D6A4F;line-height:1.7;margin-bottom:10px;white-space:pre-line}
+.guide-note-placeholder{font-size:12px;color:#95C8A8;font-style:italic;margin-bottom:10px}
+
+/* PHOTO ALBUM */
+.album-wrap{position:relative}
+.album-label{font-size:11px;font-weight:700;color:#2D6A4F;margin-bottom:6px;display:flex;align-items:center;gap:4px}
+.album-scroll{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px 0 6px;scroll-snap-type:x mandatory}
+.album-scroll::-webkit-scrollbar{display:none}
+.album-slide{flex-shrink:0;width:180px;height:120px;border-radius:10px;overflow:hidden;scroll-snap-align:start;background:#D8EDE0;position:relative}
+.album-slide img{width:100%;height:100%;object-fit:cover}
+.album-slide-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#52B788;font-size:11px}
+.album-slide-placeholder .ph-icon{font-size:24px}
+.album-dots{display:flex;gap:4px;justify-content:center;margin-top:4px}
+.album-dot{width:5px;height:5px;border-radius:50%;background:#B7E4C7;transition:.2s}
+.album-dot.active{background:#2D6A4F;width:14px;border-radius:3px}
+
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 8px 8px}
+.tag{font-size:11px;font-weight:700;border-radius:10px;padding:3px 10px}
+.tag-eat{background:#FEF3E2;color:#D07020}
+.tag-buy{background:#FCE8EC;color:#C03050}
+.tag-photo{background:#E3EEF8;color:#1060A0}
+.tag-tip{background:#E8F4E8;color:#207030}
+
+.photo-tip{background:#F0F6FF;border-radius:10px;padding:10px 12px;margin:8px 0 8px 8px;font-size:11px;color:#3B6FA0;display:flex;gap:6px;align-items:flex-start}
+.photo-tip-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+.map-btn{display:flex;align-items:center;gap:5px;background:var(--fuji);color:#fff;border:none;border-radius:12px;padding:8px 14px;font-family:'Zen Maru Gothic',sans-serif;font-size:12px;cursor:pointer;text-decoration:none;justify-content:center;margin:10px 0 0 8px;width:calc(100% - 8px);transition:.3s}
+body.guide-mode .map-btn{background:var(--guide)}
+
+.parking-info{background:#F8FAF0;border:1px solid #D8E8C0;border-radius:10px;padding:8px 12px;margin:8px 0 0 8px;font-size:11px;color:#4A6030;display:flex;gap:6px;align-items:center}
+
+.outfit-box{background:linear-gradient(135deg,#E8F4FF 0%,#F0F8FF 100%);border:1.5px solid #C0D8F0;border-radius:14px;padding:14px 16px;margin-top:4px}
+body.guide-mode .outfit-box{background:linear-gradient(135deg,#E8F5EE 0%,#F0FAF4 100%);border-color:#B7E4C7}
+.outfit-title{font-size:13px;font-weight:700;color:var(--fuji);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+body.guide-mode .outfit-title{color:var(--guide)}
+.outfit-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.outfit-item{background:#fff;border-radius:10px;padding:8px 10px;font-size:11px;color:#555}
+.outfit-item strong{display:block;color:#3B6FA0;font-size:12px;margin-bottom:2px}
+body.guide-mode .outfit-item strong{color:var(--guide)}
+
+/* GUIDE TAB - TODO */
+.todo-day-selector{display:flex;gap:8px;overflow-x:auto;padding:4px 0 12px;scrollbar-width:none}
+.todo-day-selector::-webkit-scrollbar{display:none}
+.todo-day-btn{flex-shrink:0;background:#fff;border:2px solid #e0e4ea;border-radius:20px;padding:8px 16px;font-family:'Zen Maru Gothic',sans-serif;font-size:13px;cursor:pointer;transition:.2s;color:#666;white-space:nowrap;line-height:1.4}
+.todo-day-btn.active{background:var(--guide);border-color:var(--guide);color:#fff;font-weight:700}
+
+.todo-panel{display:none}
+.todo-panel.active{display:block}
+.todo-section{background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:12px;border:1.5px solid #B7E4C7}
+.todo-title{font-size:14px;font-weight:700;color:var(--guide);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.todo-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid #f0f4f0;cursor:pointer;transition:.2s}
+.todo-item:last-child{border-bottom:none}
+.todo-check{width:20px;height:20px;border-radius:6px;border:2px solid #B7E4C7;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:.2s;background:#fff}
+.todo-item.done .todo-check{background:var(--guide);border-color:var(--guide)}
+.todo-item.done .todo-check::after{content:'✓';color:#fff;font-size:12px;font-weight:700}
+.todo-text{font-size:13px;color:#2d3a4a;line-height:1.5;transition:.2s}
+.todo-item.done .todo-text{color:#aaa;text-decoration:line-through}
+.todo-progress{background:#E8F5EE;border-radius:8px;padding:8px 12px;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.todo-progress-bar{flex:1;height:6px;background:#C7EAD4;border-radius:3px;overflow:hidden}
+.todo-progress-fill{height:100%;background:var(--guide);border-radius:3px;transition:.4s}
+.todo-progress-text{font-size:11px;color:var(--guide);font-weight:700;white-space:nowrap}
+
+/* GUIDE SECTION (family mode) */
+.guide-section{background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:12px;border:1.5px solid #eef0f4}
+.guide-title{font-size:15px;font-weight:700;color:var(--fuji);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.guide-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #f0f2f4;font-size:13px;color:#555;align-items:flex-start}
+.guide-item:last-child{border-bottom:none}
+.guide-item-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.guide-item strong{color:#2d3a4a;display:block;font-size:13px}
+
+.weather-card{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;border:1.5px solid #eef0f4;text-align:center}
+.weather-temp{font-size:36px;font-weight:700;color:var(--fuji)}
+.weather-sub{font-size:13px;color:#888;margin-top:4px}
+.weather-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.weather-item{background:#F5F8FC;border-radius:10px;padding:10px;text-align:center}
+.weather-item .w-icon{font-size:20px;margin-bottom:4px}
+.weather-item .w-label{font-size:11px;color:#888}
+.weather-item .w-val{font-size:14px;font-weight:700;color:#2d3a4a}
+.week-row{display:flex;gap:6px;overflow-x:auto;padding:4px 0;scrollbar-width:none}
+.week-row::-webkit-scrollbar{display:none}
+.week-item{flex-shrink:0;background:#F5F8FC;border-radius:12px;padding:10px 12px;text-align:center;min-width:60px}
+.week-item.today{background:var(--fuji);color:#fff}
+.week-item .wd{font-size:11px;opacity:.7}
+.week-item .wi{font-size:18px;margin:4px 0}
+.week-item .wt{font-size:12px;font-weight:700}
+
+.pending-note{background:#FFF8E6;border:1.5px dashed #F4C060;border-radius:12px;padding:12px 14px;font-size:12px;color:#9A6010;text-align:center;margin-bottom:12px}
+
+/* CLICK RIPPLE */
+@keyframes ripple{0%{transform:scale(1)}50%{transform:scale(1.4)}100%{transform:scale(1)}}
+.header-icon.clicked{animation:ripple .15s ease}
+</style>
+</head>
+<body>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="switchModal">
+  <div class="modal">
+    <div class="modal-icon" id="modalIcon">🗺️</div>
+    <div class="modal-title" id="modalTitle">切換到導遊版本？</div>
+    <div class="modal-desc" id="modalDesc">導遊版本包含待辦清單與詳細行程備註，僅供帶路人使用。</div>
+    <div class="modal-btns">
+      <button class="modal-btn cancel" onclick="closeModal()">取消</button>
+      <button class="modal-btn confirm" id="modalConfirm" onclick="confirmSwitch()">確認切換</button>
+    </div>
+  </div>
+</div>
+
+<div class="header">
+  <div class="header-icon" id="headerIcon" onclick="handleIconClick()">⛩️</div>
+  <h1>岡山五天四夜自由行</h1>
+  <div class="subtitle" id="headerSubtitle">Okayama Free Trip</div>
+  <div class="dates">📅 2024年 12月 20日 ～ 12月 24日</div>
+  <div><span class="mode-badge" id="modeBadge">👨‍👩‍👧 家庭旅遊版</span></div>
+</div>
+
+<div class="content">
+
+  <!-- ===== 行程 TAB ===== -->
+  <div class="tab-content active" id="tab-itinerary">
+    <div class="day-selector">
+      <button class="day-btn active" onclick="switchDay(1,this)">Day 1<br><span style="font-size:10px">12/20 抵岡山</span></button>
+      <button class="day-btn" onclick="switchDay(2,this)">Day 2<br><span style="font-size:10px">12/21 倉敷</span></button>
+      <button class="day-btn" onclick="switchDay(3,this)">Day 3<br><span style="font-size:10px">12/22 後樂園</span></button>
+      <button class="day-btn" onclick="switchDay(4,this)">Day 4<br><span style="font-size:10px">12/23 直島</span></button>
+      <button class="day-btn" onclick="switchDay(5,this)">Day 5<br><span style="font-size:10px">12/24 返程</span></button>
+    </div>
+
+    <!-- Day 1 -->
+    <div class="day-panel active" id="day-1">
+      <div class="day-header">
+        <div class="day-badge">Day<br>1</div>
+        <div class="day-info">
+          <h2>抵達岡山 · 市區探索</h2>
+          <p>📍 岡山市中心 · 表町商店街</p>
+        </div>
+      </div>
+      <div class="pending-note">⏰ 詳細時間表待補充</div>
+
+      <!-- 岡山駅 -->
+      <div class="timeline-item">
+        <div class="time-col">
+          <div class="time-badge">09:00<br>↓<br>10:30</div>
+          <div class="time-line"></div>
+        </div>
+        <div class="spot-card type-transport">
+          <div class="spot-header">
+            <span class="cat-badge cat-transport">🚄 交通</span>
+            <span class="spot-name">岡山駅 抵達</span>
+            <button class="guide-note-btn" onclick="toggleNote(this)" title="導遊備註">📋</button>
+          </div>
+          <div class="spot-desc">由新幹線抵達岡山駅，步行至飯店辦理入住。建議使用 Suica 或 ICOCA 感應搭乘市電。</div>
+          <div class="parking-info">🅿️ 岡山駅西口地下停車場 ¥200/h ⛽ ENEOS 表町 2.1km</div>
+          <a class="map-btn" href="https://maps.google.com/?q=岡山駅" target="_blank">🗺 Google Maps 導航</a>
+          <div class="guide-note-panel">
+            <div class="guide-note-inner">
+              <div class="guide-note-placeholder">📝 尚未新增文字備註</div>
+              <div class="album-label">🖼 流程相簿 <span style="color:#95C8A8;font-weight:400">（左右滑動）</span></div>
+              <div class="album-scroll" onscroll="updateDots(this)">
+                <div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 1</div></div>
+                <div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 2</div></div>
+                <div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 3</div></div>
+              </div>
+              <div class="album-dots">
+                <div class="album-dot active"></div>
+                <div class="album-dot"></div>
+                <div class="album-dot"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Richmond Hotel -->
+      <div class="timeline-item">
+        <div class="time-col">
+          <div class="time-badge">11:00<br>↓<br>12:00</div>
+          <div class="time-line"></div>
+        </div>
+        <div class="spot-card type-hotel">
+          <div class="spot-header">
+            <span class="cat-badge cat-hotel">🏨 住宿</span>
+            <span class="spot-name">Richmond Hotel Okayama</span>
+            <button class="guide-note-btn" onclick="toggleNote(this)" title="導遊備註">📋</button>
+          </div>
+          <div class="spot-desc">離岡山駅步行約 5 分鐘，設施新穎、早餐評價佳。推薦提前於官網預訂以享最低價。</div>
+          <div class="tags"><span class="tag tag-tip">✅ 行李寄放後輕裝出發</span></div>
+          <a class="map-btn" href="https://maps.google.com/?q=Richmond+Hotel+Okayama" target="_blank">🗺 Google Maps 導航</a>
+          <div class="guide-note-panel">
+            <div class="guide-note-inner">
+              <div class="guide-note-placeholder">📝 尚未新增文字備註</div>
+              <div class="album-label">🖼 流程相簿 <span style="color:#95C8A8;font-weight:400">（左右滑動）</span></div>
+              <div class="album-scroll">
+                <div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 1</div></div>
+                <div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 2</div></div>
+              </div>
+              <div class="album-dots"><div class="album-dot active"></div><div class="album-dot"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- えびす -->
+      <div class="timeline-item">
+        <div class="time-col">
+          <div class="time-badge">12:30<br>↓<br>14:00</div>
+          <div class="time-line"></div>
+        </div>
+        <div class="spot-card type-food">
+          <div class="spot-header">
+            <span class="cat-badge cat-food">🍜 美食</span>
+            <span class="spot-name">えびす 岡山醬汁焼きそば</span>
+            <button class="guide-note-btn" onclick="toggleNote(this)" title="導遊備註">📋</button>
+          </div>
+          <div class="spot-desc">岡山在地靈魂美食，醬汁炒麵使用特調濃醬，加上半熟蛋更是一絕。排隊名店請提早前往。</div>
+          <div class="tags">
+            <span class="tag tag-eat">🍽 必吃：醬汁焼きそば</span>
+            <span class="tag tag-photo">📸 必拍：紅色暖簾＋鐵板</span>
+          </div>
+          <div class="photo-tip"><span class="photo-tip-icon">💡</span>拍攝鐵板炒麵冒煙瞬間，開大光圈捕捉蒸氣，逆光效果最佳！</div>
+          <a class="map-btn" href="https://maps.google.com/?q=えびす+岡山" target="_blank">🗺 Google Maps 導航</a>
+          <div class="guide-note-panel">
+            <div class="guide-note-inner">
+              <div class="guide-note-placeholder">📝 尚未新增文字備註</div>
+              <div class="album-label">🖼 流程相簿 <span style="color:#95C8A8;font-weight:400">（左右滑動）</span></div>
+              <div class="album-scroll">
+                <div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 1</div></div>
+                <div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 2</div></div>
+              </div>
+              <div class="album-dots"><div class="album-dot active"></div><div class="album-dot"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 表町商店街 -->
+      <div class="timeline-item">
+        <div class="time-col">
+          <div class="time-badge">14:30<br>↓<br>18:00</div>
+          <div class="time-line"></div>
+        </div>
+        <div class="spot-card type-shop">
+          <div class="spot-header">
+            <span class="cat-badge cat-shop">🛍 購物</span>
+            <span class="spot-name">表町商店街</span>
+            <button class="guide-note-btn" onclick="toggleNote(this)" title="導遊備註">📋</button>
+          </div>
+          <div class="spot-desc">岡山最大有蓋商店街，全長約 2.4km，涵蓋各類雜貨、藥妝、土産與咖啡廳。</div>
+          <div class="tags">
+            <span class="tag tag-buy">🛒 必買：岡山白桃果凍</span>
+            <span class="tag tag-buy">🛒 必買：吉備糰子</span>
+            <span class="tag tag-photo">📸 必拍：街道耶誕彩燈</span>
+          </div>
+          <a class="map-btn" href="https://maps.google.com/?q=表町商店街+岡山" target="_blank">🗺 Google Maps 導航</a>
+          <div class="guide-note-panel">
+            <div class="guide-note-inner">
+              <div class="guide-note-placeholder">📝 尚未新增文字備註</div>
+              <div class="album-label">🖼 流程相簿 <span style="color:#95C8A8;font-weight:400">（左右滑動）</span></div>
+              <div class="album-scroll">
+                <div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 1</div></div>
+                <div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 2</div></div>
+              </div>
+              <div class="album-dots"><div class="album-dot active"></div><div class="album-dot"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="outfit-box">
+        <div class="outfit-title">🧥 Day 1 穿著建議 ＆ 天氣提示</div>
+        <div class="outfit-grid">
+          <div class="outfit-item"><strong>🌡 氣溫</strong>5～11°C 早晚寒涼</div>
+          <div class="outfit-item"><strong>❄️ 雪況</strong>市區無積雪，偶有薄霜</div>
+          <div class="outfit-item"><strong>👕 上身</strong>厚毛衣＋輕羽絨外套</div>
+          <div class="outfit-item"><strong>👟 鞋款</strong>防水運動鞋即可</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Day 2 -->
+    <div class="day-panel" id="day-2">
+      <div class="day-header">
+        <div class="day-badge">Day<br>2</div>
+        <div class="day-info">
+          <h2>倉敷美觀地區</h2>
+          <p>📍 倉敷市 · 美觀地區 · 阿智神社</p>
+        </div>
+      </div>
+      <div class="pending-note">⏰ 詳細時間表待補充</div>
+
+      <div class="timeline-item">
+        <div class="time-col"><div class="time-badge">07:30<br>↓<br>09:00</div><div class="time-line"></div></div>
+        <div class="spot-card type-sight">
+          <div class="spot-header">
+            <span class="cat-badge cat-sight">🏯 景點</span>
+            <span class="spot-name">倉敷美觀地區（清晨）</span>
+            <button class="guide-note-btn" onclick="toggleNote(this)" title="導遊備註">📋</button>
+          </div>
+          <div class="spot-desc">白牆黑瓦倉庫沿運河而建，冬季清晨薄霧宛如水墨畫，人少光好是拍照黃金時段。</div>
+          <div class="tags"><span class="tag tag-photo">📸 必拍：運河白壁倒影</span><span class="tag tag-photo">📸 必拍：石橋＋燈籠晨光</span></div>
+          <div class="photo-tip"><span class="photo-tip-icon">💡</span>早上 7-8 點人少光好，運河倒影最清晰，超廣角拍兩岸對稱構圖最美！</div>
+          <a class="map-btn" href="https://maps.google.com/?q=倉敷美観地区" target="_blank">🗺 Google Maps 導航</a>
+          <div class="guide-note-panel"><div class="guide-note-inner"><div class="guide-note-placeholder">📝 尚未新增文字備註</div><div class="album-label">🖼 流程相簿 <span style="color:#95C8A8;font-weight:400">（左右滑動）</span></div><div class="album-scroll"><div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 1</div></div><div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 2</div></div></div><div class="album-dots"><div class="album-dot active"></div><div class="album-dot"></div></div></div></div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="time-col"><div class="time-badge">12:00<br>↓<br>13:30</div><div class="time-line"></div></div>
+        <div class="spot-card type-food">
+          <div class="spot-header">
+            <span class="cat-badge cat-food">🍱 美食</span>
+            <span class="spot-name">むら㐂 倉敷祭壽司</span>
+            <button class="guide-note-btn" onclick="toggleNote(this)" title="導遊備註">📋</button>
+          </div>
+          <div class="spot-desc">倉敷名物「祭壽司」以當季瀨戶內海鮮製作，色彩繽紛口感清爽，是岡山縣代表料理。</div>
+          <div class="tags"><span class="tag tag-eat">🍽 必吃：祭壽司套餐</span><span class="tag tag-eat">🍽 必吃：瀨戶內穴子</span></div>
+          <a class="map-btn" href="https://maps.google.com/?q=むら㐂+倉敷" target="_blank">🗺 Google Maps 導航</a>
+          <div class="guide-note-panel"><div class="guide-note-inner"><div class="guide-note-placeholder">📝 尚未新增文字備註</div><div class="album-label">🖼 流程相簿 <span style="color:#95C8A8;font-weight:400">（左右滑動）</span></div><div class="album-scroll"><div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 1</div></div><div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 2</div></div></div><div class="album-dots"><div class="album-dot active"></div><div class="album-dot"></div></div></div></div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="time-col"><div class="time-badge">14:00<br>↓<br>17:00</div><div class="time-line"></div></div>
+        <div class="spot-card type-shop">
+          <div class="spot-header">
+            <span class="cat-badge cat-shop">🛍 購物</span>
+            <span class="spot-name">有鄰庵・倉敷雜貨街</span>
+            <button class="guide-note-btn" onclick="toggleNote(this)" title="導遊備註">📋</button>
+          </div>
+          <div class="spot-desc">倉敷獨有的手工牛仔布製品、傳統染布、波佐見燒器皿，是送禮自用的首選。</div>
+          <div class="tags"><span class="tag tag-buy">🛒 必買：倉敷帆布小物</span><span class="tag tag-buy">🛒 必買：兒島牛仔筆袋</span></div>
+          <a class="map-btn" href="https://maps.google.com/?q=有鄰庵+倉敷" target="_blank">🗺 Google Maps 導航</a>
+          <div class="guide-note-panel"><div class="guide-note-inner"><div class="guide-note-placeholder">📝 尚未新增文字備註</div><div class="album-label">🖼 流程相簿 <span style="color:#95C8A8;font-weight:400">（左右滑動）</span></div><div class="album-scroll"><div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 1</div></div><div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 2</div></div></div><div class="album-dots"><div class="album-dot active"></div><div class="album-dot"></div></div></div></div>
+        </div>
+      </div>
+
+      <div class="outfit-box">
+        <div class="outfit-title">🧥 Day 2 穿著建議</div>
+        <div class="outfit-grid">
+          <div class="outfit-item"><strong>🌡 氣溫</strong>3～9°C 陰轉晴</div>
+          <div class="outfit-item"><strong>❄️ 雪況</strong>倉敷偶有小雪，石板路濕滑</div>
+          <div class="outfit-item"><strong>👕 上身</strong>保暖內搭＋厚外套</div>
+          <div class="outfit-item"><strong>👟 鞋款</strong>建議防滑鞋底靴子</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Day 3 -->
+    <div class="day-panel" id="day-3">
+      <div class="day-header">
+        <div class="day-badge">Day<br>3</div>
+        <div class="day-info"><h2>後樂園 ＆ 岡山城</h2><p>📍 岡山市北區 · 後樂園 · 岡山城</p></div>
+      </div>
+      <div class="pending-note">⏰ 詳細時間表待補充</div>
+
+      <div class="timeline-item">
+        <div class="time-col"><div class="time-badge">09:00<br>↓<br>11:30</div><div class="time-line"></div></div>
+        <div class="spot-card type-sight">
+          <div class="spot-header"><span class="cat-badge cat-sight">🌿 景點</span><span class="spot-name">後樂園</span><button class="guide-note-btn" onclick="toggleNote(this)" title="導遊備註">📋</button></div>
+          <div class="spot-desc">日本三名園之一，冬季可見白鶴漫步於結霜草坪，搭配遠方岡山城更顯雅致。</div>
+          <div class="tags"><span class="tag tag-photo">📸 必拍：白鶴＋岡山城背景</span></div>
+          <div class="parking-info">🅿️ 後樂園駐車場 ¥250/h</div>
+          <a class="map-btn" href="https://maps.google.com/?q=後楽園+岡山" target="_blank">🗺 Google Maps 導航</a>
+          <div class="guide-note-panel"><div class="guide-note-inner"><div class="guide-note-placeholder">📝 尚未新增文字備註</div><div class="album-label">🖼 流程相簿 <span style="color:#95C8A8;font-weight:400">（左右滑動）</span></div><div class="album-scroll"><div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 1</div></div><div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 2</div></div></div><div class="album-dots"><div class="album-dot active"></div><div class="album-dot"></div></div></div></div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="time-col"><div class="time-badge">13:00<br>↓<br>15:00</div><div class="time-line"></div></div>
+        <div class="spot-card type-sight">
+          <div class="spot-header"><span class="cat-badge cat-sight">🏯 景點</span><span class="spot-name">岡山城（烏城）</span><button class="guide-note-btn" onclick="toggleNote(this)" title="導遊備註">📋</button></div>
+          <div class="spot-desc">外牆黑色塗裝的獨特天守閣，2022 年整修完工，內有互動式展覽與美麗眺望台。</div>
+          <div class="tags"><span class="tag tag-photo">📸 必拍：黑天守＋旭川倒影</span></div>
+          <a class="map-btn" href="https://maps.google.com/?q=岡山城" target="_blank">🗺 Google Maps 導航</a>
+          <div class="guide-note-panel"><div class="guide-note-inner"><div class="guide-note-placeholder">📝 尚未新增文字備註</div><div class="album-label">🖼 流程相簿 <span style="color:#95C8A8;font-weight:400">（左右滑動）</span></div><div class="album-scroll"><div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 1</div></div><div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 2</div></div></div><div class="album-dots"><div class="album-dot active"></div><div class="album-dot"></div></div></div></div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="time-col"><div class="time-badge">15:30<br>↓<br>17:00</div><div class="time-line"></div></div>
+        <div class="spot-card type-food">
+          <div class="spot-header"><span class="cat-badge cat-food">🍑 美食</span><span class="spot-name">桃太郎廚房 白桃パフェ</span><button class="guide-note-btn" onclick="toggleNote(this)" title="導遊備註">📋</button></div>
+          <div class="spot-desc">冬季限定的白桃甜點，使用冷凍保鮮白桃，風味依然鮮甜。</div>
+          <div class="tags"><span class="tag tag-eat">🍽 必吃：白桃聖代</span></div>
+          <a class="map-btn" href="https://maps.google.com/?q=桃太郎廚房+岡山" target="_blank">🗺 Google Maps 導航</a>
+          <div class="guide-note-panel"><div class="guide-note-inner"><div class="guide-note-placeholder">📝 尚未新增文字備註</div><div class="album-label">🖼 流程相簿 <span style="color:#95C8A8;font-weight:400">（左右滑動）</span></div><div class="album-scroll"><div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 1</div></div><div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 2</div></div></div><div class="album-dots"><div class="album-dot active"></div><div class="album-dot"></div></div></div></div>
+        </div>
+      </div>
+
+      <div class="outfit-box">
+        <div class="outfit-title">🧥 Day 3 穿著建議</div>
+        <div class="outfit-grid">
+          <div class="outfit-item"><strong>🌡 氣溫</strong>2～8°C 可能降雪</div>
+          <div class="outfit-item"><strong>❄️ 雪況</strong>後樂園草坪可能積薄雪</div>
+          <div class="outfit-item"><strong>👕 上身</strong>羽絨大衣＋圍巾手套</div>
+          <div class="outfit-item"><strong>👟 鞋款</strong>防水雪靴</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Day 4 -->
+    <div class="day-panel" id="day-4">
+      <div class="day-header">
+        <div class="day-badge">Day<br>4</div>
+        <div class="day-info"><h2>直島藝術之島</h2><p>📍 香川縣 直島 · 地中美術館</p></div>
+      </div>
+      <div class="pending-note">⏰ 詳細時間表待補充</div>
+
+      <div class="timeline-item">
+        <div class="time-col"><div class="time-badge">07:30<br>↓<br>08:30</div><div class="time-line"></div></div>
+        <div class="spot-card type-transport">
+          <div class="spot-header"><span class="cat-badge cat-transport">⛴ 交通</span><span class="spot-name">宇野港 → 直島 渡輪</span><button class="guide-note-btn" onclick="toggleNote(this)" title="導遊備註">📋</button></div>
+          <div class="spot-desc">從宇野港搭四國汽船約 20 分鐘抵達宮浦港。早班 8:20 出發。</div>
+          <div class="parking-info">🅿️ 宇野港停車場 ¥500/日</div>
+          <a class="map-btn" href="https://maps.google.com/?q=宇野港フェリー乗り場" target="_blank">🗺 Google Maps 導航</a>
+          <div class="guide-note-panel"><div class="guide-note-inner"><div class="guide-note-placeholder">📝 尚未新增文字備註</div><div class="album-label">🖼 流程相簿 <span style="color:#95C8A8;font-weight:400">（左右滑動）</span></div><div class="album-scroll"><div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 1</div></div><div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 2</div></div></div><div class="album-dots"><div class="album-dot active"></div><div class="album-dot"></div></div></div></div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="time-col"><div class="time-badge">09:30<br>↓<br>11:00</div><div class="time-line"></div></div>
+        <div class="spot-card type-sight">
+          <div class="spot-header"><span class="cat-badge cat-sight">🎨 景點</span><span class="spot-name">草間彌生 南瓜</span><button class="guide-note-btn" onclick="toggleNote(this)" title="導遊備註">📋</button></div>
+          <div class="spot-desc">直島最具代表性的黃色大南瓜雕塑，海邊碼頭附近，是直島的精神象徵。</div>
+          <div class="tags"><span class="tag tag-photo">📸 必拍：南瓜＋瀨戶內海</span></div>
+          <a class="map-btn" href="https://maps.google.com/?q=草間彌生南瓜+直島" target="_blank">🗺 Google Maps 導航</a>
+          <div class="guide-note-panel"><div class="guide-note-inner"><div class="guide-note-placeholder">📝 尚未新增文字備註</div><div class="album-label">🖼 流程相簿 <span style="color:#95C8A8;font-weight:400">（左右滑動）</span></div><div class="album-scroll"><div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 1</div></div><div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 2</div></div></div><div class="album-dots"><div class="album-dot active"></div><div class="album-dot"></div></div></div></div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="time-col"><div class="time-badge">13:00<br>↓<br>16:00</div><div class="time-line"></div></div>
+        <div class="spot-card type-activity">
+          <div class="spot-header"><span class="cat-badge cat-activity">🏛 活動</span><span class="spot-name">地中美術館</span><button class="guide-note-btn" onclick="toggleNote(this)" title="導遊備註">📋</button></div>
+          <div class="spot-desc">安藤忠雄設計、建於地下的美術館，以自然光展示莫內睡蓮系列原作，需提前線上預約。</div>
+          <div class="tags"><span class="tag tag-tip">✅ 必預約：官網提前訂票</span></div>
+          <a class="map-btn" href="https://maps.google.com/?q=地中美術館+直島" target="_blank">🗺 Google Maps 導航</a>
+          <div class="guide-note-panel"><div class="guide-note-inner"><div class="guide-note-placeholder">📝 尚未新增文字備註</div><div class="album-label">🖼 流程相簿 <span style="color:#95C8A8;font-weight:400">（左右滑動）</span></div><div class="album-scroll"><div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 1</div></div><div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 2</div></div></div><div class="album-dots"><div class="album-dot active"></div><div class="album-dot"></div></div></div></div>
+        </div>
+      </div>
+
+      <div class="outfit-box">
+        <div class="outfit-title">🧥 Day 4 穿著建議</div>
+        <div class="outfit-grid">
+          <div class="outfit-item"><strong>🌡 氣溫</strong>6～12°C 海風強</div>
+          <div class="outfit-item"><strong>❄️ 雪況</strong>島上無積雪，注意海風寒</div>
+          <div class="outfit-item"><strong>👕 上身</strong>風衣＋羊毛中層</div>
+          <div class="outfit-item"><strong>👟 鞋款</strong>輕量健行鞋</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Day 5 -->
+    <div class="day-panel" id="day-5">
+      <div class="day-header">
+        <div class="day-badge">Day<br>5</div>
+        <div class="day-info"><h2>岡山採購 · 返程</h2><p>📍 岡山駅周邊 · 返程</p></div>
+      </div>
+      <div class="pending-note">⏰ 詳細時間表待補充</div>
+
+      <div class="timeline-item">
+        <div class="time-col"><div class="time-badge">09:00<br>↓<br>11:00</div><div class="time-line"></div></div>
+        <div class="spot-card type-shop">
+          <div class="spot-header"><span class="cat-badge cat-shop">🛍 購物</span><span class="spot-name">岡山駅 Momotaro Jeans</span><button class="guide-note-btn" onclick="toggleNote(this)" title="導遊備註">📋</button></div>
+          <div class="spot-desc">兒島牛仔布是岡山驕傲，岡山駅內有品牌直營門市。</div>
+          <div class="tags"><span class="tag tag-buy">🛒 必買：桃太郎牛仔褲</span></div>
+          <a class="map-btn" href="https://maps.google.com/?q=Momotaro+Jeans+岡山駅" target="_blank">🗺 Google Maps 導航</a>
+          <div class="guide-note-panel"><div class="guide-note-inner"><div class="guide-note-placeholder">📝 尚未新增文字備註</div><div class="album-label">🖼 流程相簿 <span style="color:#95C8A8;font-weight:400">（左右滑動）</span></div><div class="album-scroll"><div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 1</div></div><div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 2</div></div></div><div class="album-dots"><div class="album-dot active"></div><div class="album-dot"></div></div></div></div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="time-col"><div class="time-badge">11:30<br>↓<br>12:30</div><div class="time-line"></div></div>
+        <div class="spot-card type-food">
+          <div class="spot-header"><span class="cat-badge cat-food">🍱 美食</span><span class="spot-name">三好野本店 岡山駅弁</span><button class="guide-note-btn" onclick="toggleNote(this)" title="導遊備註">📋</button></div>
+          <div class="spot-desc">創業超過百年的岡山駅弁老舖，「祭壽司」便當是新幹線上最受歡迎的車站便當之一。</div>
+          <div class="tags"><span class="tag tag-eat">🍽 必吃：祭壽司お弁当</span></div>
+          <a class="map-btn" href="https://maps.google.com/?q=三好野本店+岡山" target="_blank">🗺 Google Maps 導航</a>
+          <div class="guide-note-panel"><div class="guide-note-inner"><div class="guide-note-placeholder">📝 尚未新增文字備註</div><div class="album-label">🖼 流程相簿 <span style="color:#95C8A8;font-weight:400">（左右滑動）</span></div><div class="album-scroll"><div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 1</div></div><div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 2</div></div></div><div class="album-dots"><div class="album-dot active"></div><div class="album-dot"></div></div></div></div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="time-col"><div class="time-badge">14:00<br>↓<br>出發</div><div class="time-line"></div></div>
+        <div class="spot-card type-transport">
+          <div class="spot-header"><span class="cat-badge cat-transport">✈️ 交通</span><span class="spot-name">岡山駅 → 關西空港 出發</span><button class="guide-note-btn" onclick="toggleNote(this)" title="導遊備註">📋</button></div>
+          <div class="spot-desc">搭新幹線至新大阪後轉乘 Haruka 特急至關西空港，全程約 2 小時。</div>
+          <div class="tags"><span class="tag tag-tip">✅ 別忘了 TAX REFUND 退稅</span></div>
+          <a class="map-btn" href="https://maps.google.com/?q=岡山駅" target="_blank">🗺 Google Maps 導航</a>
+          <div class="guide-note-panel"><div class="guide-note-inner"><div class="guide-note-placeholder">📝 尚未新增文字備註</div><div class="album-label">🖼 流程相簿 <span style="color:#95C8A8;font-weight:400">（左右滑動）</span></div><div class="album-scroll"><div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 1</div></div><div class="album-slide"><div class="album-slide-placeholder"><span class="ph-icon">📷</span>新增圖片 2</div></div></div><div class="album-dots"><div class="album-dot active"></div><div class="album-dot"></div></div></div></div>
+        </div>
+      </div>
+
+      <div class="outfit-box">
+        <div class="outfit-title">🧥 Day 5 穿著建議</div>
+        <div class="outfit-grid">
+          <div class="outfit-item"><strong>🌡 氣溫</strong>4～10°C 晴轉多雲</div>
+          <div class="outfit-item"><strong>❄️ 雪況</strong>市區道路無積雪</div>
+          <div class="outfit-item"><strong>👕 上身</strong>輕便外套</div>
+          <div class="outfit-item"><strong>👟 鞋款</strong>舒適行走鞋</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 指南 / 待辦 TAB ===== -->
+  <div class="tab-content" id="tab-guide">
+
+    <!-- 家庭版：原有指南 -->
+    <div id="family-guide">
+      <div class="guide-section">
+        <div class="guide-title">💴 金錢 ＆ 交通</div>
+        <div class="guide-item"><span class="guide-item-icon">💳</span><div><strong>交通 IC 卡</strong>建議使用 ICOCA 或 Suica，可搭乘市電、JR、公車</div></div>
+        <div class="guide-item"><span class="guide-item-icon">🚌</span><div><strong>岡山市電</strong>單程 ¥140，一日券 ¥400，市區觀光超划算</div></div>
+        <div class="guide-item"><span class="guide-item-icon">🚙</span><div><strong>租車建議</strong>前往直島需在宇野港停車，推薦 Times Car 租一天</div></div>
+        <div class="guide-item"><span class="guide-item-icon">💰</span><div><strong>每日預算</strong>餐費 ¥3000 ＋ 門票 ¥2000 ＋ 購物 ¥3000</div></div>
+      </div>
+      <div class="guide-section">
+        <div class="guide-title">📱 實用 App</div>
+        <div class="guide-item"><span class="guide-item-icon">🗺</span><div><strong>Google Maps</strong>離線下載岡山地圖</div></div>
+        <div class="guide-item"><span class="guide-item-icon">🚆</span><div><strong>乗換案内</strong>日本最準確的電車轉乘查詢 App</div></div>
+        <div class="guide-item"><span class="guide-item-icon">💱</span><div><strong>XE Currency</strong>即時匯率換算</div></div>
+        <div class="guide-item"><span class="guide-item-icon">🌤</span><div><strong>tenki.jp</strong>日本最準確的天氣預報 App</div></div>
+      </div>
+      <div class="guide-section">
+        <div class="guide-title">🚨 緊急資訊</div>
+        <div class="guide-item"><span class="guide-item-icon">🏥</span><div><strong>岡山大學醫院</strong>有英語對應窗口</div></div>
+        <div class="guide-item"><span class="guide-item-icon">👮</span><div><strong>警察</strong>電話 110 / 外國旅客 050-3816-2787</div></div>
+        <div class="guide-item"><span class="guide-item-icon">🔥</span><div><strong>救護車 / 火警</strong>電話 119</div></div>
+      </div>
+    </div>
+
+    <!-- 導遊版：待辦清單 -->
+    <div id="guide-todo" style="display:none">
+      <div class="todo-day-selector">
+        <button class="todo-day-btn active" onclick="switchTodoDay(1,this)">Day 1<br><span style="font-size:10px">12/20</span></button>
+        <button class="todo-day-btn" onclick="switchTodoDay(2,this)">Day 2<br><span style="font-size:10px">12/21</span></button>
+        <button class="todo-day-btn" onclick="switchTodoDay(3,this)">Day 3<br><span style="font-size:10px">12/22</span></button>
+        <button class="todo-day-btn" onclick="switchTodoDay(4,this)">Day 4<br><span style="font-size:10px">12/23</span></button>
+        <button class="todo-day-btn" onclick="switchTodoDay(5,this)">Day 5<br><span style="font-size:10px">12/24</span></button>
+      </div>
+
+      <div class="todo-panel active" id="todo-1">
+        <div class="todo-section">
+          <div class="todo-title">✅ Day 1 待辦清單</div>
+          <div class="todo-progress"><div class="todo-progress-bar"><div class="todo-progress-fill" style="width:0%"></div></div><span class="todo-progress-text">0 / 3 完成</span></div>
+          <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">待補充事項 1</div></div>
+          <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">待補充事項 2</div></div>
+          <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">待補充事項 3</div></div>
+        </div>
+      </div>
+      <div class="todo-panel" id="todo-2">
+        <div class="todo-section">
+          <div class="todo-title">✅ Day 2 待辦清單</div>
+          <div class="todo-progress"><div class="todo-progress-bar"><div class="todo-progress-fill" style="width:0%"></div></div><span class="todo-progress-text">0 / 3 完成</span></div>
+          <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">待補充事項 1</div></div>
+          <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">待補充事項 2</div></div>
+          <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">待補充事項 3</div></div>
+        </div>
+      </div>
+      <div class="todo-panel" id="todo-3">
+        <div class="todo-section">
+          <div class="todo-title">✅ Day 3 待辦清單</div>
+          <div class="todo-progress"><div class="todo-progress-bar"><div class="todo-progress-fill" style="width:0%"></div></div><span class="todo-progress-text">0 / 3 完成</span></div>
+          <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">待補充事項 1</div></div>
+          <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">待補充事項 2</div></div>
+          <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">待補充事項 3</div></div>
+        </div>
+      </div>
+      <div class="todo-panel" id="todo-4">
+        <div class="todo-section">
+          <div class="todo-title">✅ Day 4 待辦清單</div>
+          <div class="todo-progress"><div class="todo-progress-bar"><div class="todo-progress-fill" style="width:0%"></div></div><span class="todo-progress-text">0 / 3 完成</span></div>
+          <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">待補充事項 1</div></div>
+          <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">待補充事項 2</div></div>
+          <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">待補充事項 3</div></div>
+        </div>
+      </div>
+      <div class="todo-panel" id="todo-5">
+        <div class="todo-section">
+          <div class="todo-title">✅ Day 5 待辦清單</div>
+          <div class="todo-progress"><div class="todo-progress-bar"><div class="todo-progress-fill" style="width:0%"></div></div><span class="todo-progress-text">0 / 3 完成</span></div>
+          <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">待補充事項 1</div></div>
+          <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">待補充事項 2</div></div>
+          <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">待補充事項 3</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 天氣 TAB ===== -->
+  <div class="tab-content" id="tab-weather">
+    <div class="weather-card">
+      <div style="font-size:40px;margin-bottom:6px">⛅</div>
+      <div class="weather-temp">8°C</div>
+      <div style="font-size:15px;font-weight:600;margin-top:4px;color:#2d3a4a">岡山市</div>
+      <div class="weather-sub">12月下旬 旅行期間天氣預覽</div>
+      <div class="weather-row">
+        <div class="weather-item"><div class="w-icon">💧</div><div class="w-label">濕度</div><div class="w-val">62%</div></div>
+        <div class="weather-item"><div class="w-icon">💨</div><div class="w-label">風速</div><div class="w-val">12 km/h</div></div>
+        <div class="weather-item"><div class="w-icon">🌅</div><div class="w-label">日出</div><div class="w-val">07:08</div></div>
+        <div class="weather-item"><div class="w-icon">🌇</div><div class="w-label">日落</div><div class="w-val">16:57</div></div>
+      </div>
+    </div>
+    <div style="background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:12px;border:1.5px solid #eef0f4">
+      <div class="guide-title" style="margin-bottom:10px">📅 五天天氣預覽</div>
+      <div class="week-row">
+        <div class="week-item today"><div class="wd">12/20</div><div class="wi">🌤</div><div class="wt">11°/5°</div></div>
+        <div class="week-item"><div class="wd">12/21</div><div class="wi">☁️</div><div class="wt">9°/3°</div></div>
+        <div class="week-item"><div class="wd">12/22</div><div class="wi">🌨</div><div class="wt">7°/2°</div></div>
+        <div class="week-item"><div class="wd">12/23</div><div class="wi">⛅</div><div class="wt">12°/6°</div></div>
+        <div class="week-item"><div class="wd">12/24</div><div class="wi">🌤</div><div class="wt">10°/4°</div></div>
+      </div>
+    </div>
+    <div class="guide-section">
+      <div class="guide-title">❄️ 冬季岡山雪況說明</div>
+      <div class="guide-item"><span class="guide-item-icon">🌨</span><div><strong>市區降雪</strong>偶有小雪，多為陣雪，通常不積雪</div></div>
+      <div class="guide-item"><span class="guide-item-icon">🏔</span><div><strong>北部山區</strong>津山・蒜山高原有積雪，需雪鏈</div></div>
+      <div class="guide-item"><span class="guide-item-icon">🛣</span><div><strong>道路狀況</strong>市區道路定時除雪，橋面注意結冰</div></div>
+    </div>
+    <div class="guide-section">
+      <div class="guide-title">🧥 行前打包清單</div>
+      <div class="guide-item"><span class="guide-item-icon">🧤</span><div><strong>保暖配件</strong>毛帽、手套、圍巾</div></div>
+      <div class="guide-item"><span class="guide-item-icon">👢</span><div><strong>防水鞋靴</strong>倉敷石板路及後樂園草坪需防水</div></div>
+      <div class="guide-item"><span class="guide-item-icon">🧴</span><div><strong>護膚保濕</strong>護唇膏＋乳液每日必用</div></div>
+      <div class="guide-item"><span class="guide-item-icon">☂️</span><div><strong>折疊傘</strong>輕便傘即可</div></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="tab-bar">
+  <div class="tab-item active" id="nav-itinerary" onclick="switchTab('itinerary')">
+    <span class="tab-icon">🗓</span><span>行程</span>
+  </div>
+  <div class="tab-item" id="nav-guide" onclick="switchTab('guide')">
+    <span class="tab-icon" id="guideTabIcon">📖</span><span id="guideTabLabel">指南</span>
+  </div>
+  <div class="tab-item" id="nav-weather" onclick="switchTab('weather')">
+    <span class="tab-icon">🌤</span><span>天氣</span>
+  </div>
+</div>
+
+<script>
+// ── MODE SWITCH ──────────────────────────────
+let clickCount = 0, clickTimer = null;
+let isGuideMode = false;
+
+function handleIconClick(){
+  const icon = document.getElementById('headerIcon');
+  icon.classList.remove('clicked');
+  void icon.offsetWidth;
+  icon.classList.add('clicked');
+
+  clickCount++;
+  clearTimeout(clickTimer);
+  clickTimer = setTimeout(()=>{ clickCount=0; }, 2000);
+
+  if(clickCount >= 5){
+    clickCount = 0;
+    clearTimeout(clickTimer);
+    showModal();
+  }
+}
+
+function showModal(){
+  const modal = document.getElementById('switchModal');
+  const btn = document.getElementById('modalConfirm');
+  const icon = document.getElementById('modalIcon');
+  const title = document.getElementById('modalTitle');
+  const desc = document.getElementById('modalDesc');
+  if(isGuideMode){
+    icon.textContent = '👨‍👩‍👧';
+    title.textContent = '切換回家庭旅遊版？';
+    desc.textContent = '將隱藏導遊備註與待辦清單，切換回家人閱覽模式。';
+    btn.textContent = '確認切換';
+    btn.classList.remove('confirm');
+    btn.classList.add('confirm','to-family');
+  } else {
+    icon.textContent = '🗺️';
+    title.textContent = '切換到導遊版本？';
+    desc.textContent = '導遊版本包含每日待辦清單與詳細行程備註，僅供帶路人使用。';
+    btn.textContent = '確認切換';
+    btn.classList.remove('to-family');
+  }
+  modal.classList.add('show');
+}
+
+function closeModal(){ document.getElementById('switchModal').classList.remove('show'); }
+
+function confirmSwitch(){
+  closeModal();
+  isGuideMode = !isGuideMode;
+  document.body.classList.toggle('guide-mode', isGuideMode);
+  document.getElementById('modeBadge').textContent = isGuideMode ? '🗺️ 導遊專用版' : '👨‍👩‍👧 家庭旅遊版';
+  document.getElementById('headerSubtitle').textContent = isGuideMode ? 'Guide Mode — 導遊專用' : 'Okayama Free Trip';
+  document.getElementById('family-guide').style.display = isGuideMode ? 'none' : 'block';
+  document.getElementById('guide-todo').style.display = isGuideMode ? 'block' : 'none';
+  document.getElementById('guideTabIcon').textContent = isGuideMode ? '✅' : '📖';
+  document.getElementById('guideTabLabel').textContent = isGuideMode ? '待辦' : '指南';
+}
+
+// ── TABS ──────────────────────────────────────
+function switchTab(tab){
+  document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.tab-item').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('nav-'+tab).classList.add('active');
+}
+
+// ── DAYS ──────────────────────────────────────
+function switchDay(day,btn){
+  document.querySelectorAll('.day-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.day-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('day-'+day).classList.add('active');
+}
+
+function switchTodoDay(day,btn){
+  document.querySelectorAll('.todo-day-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.todo-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('todo-'+day).classList.add('active');
+}
+
+// ── GUIDE NOTE ────────────────────────────────
+function toggleNote(btn){
+  const panel = btn.closest('.spot-card').querySelector('.guide-note-panel');
+  const open = panel.classList.toggle('open');
+  btn.classList.toggle('active', open);
+  btn.textContent = open ? '✕' : '📋';
+}
+
+// ── TODO ──────────────────────────────────────
+function toggleTodo(item){
+  item.classList.toggle('done');
+  updateProgress(item.closest('.todo-section'));
+}
+
+function updateProgress(section){
+  const items = section.querySelectorAll('.todo-item');
+  const done = section.querySelectorAll('.todo-item.done').length;
+  const pct = items.length ? (done/items.length*100) : 0;
+  section.querySelector('.todo-progress-fill').style.width = pct+'%';
+  section.querySelector('.todo-progress-text').textContent = done+' / '+items.length+' 完成';
+}
+
+// ── ALBUM DOTS ────────────────────────────────
+function updateDots(scrollEl){
+  const dots = scrollEl.nextElementSibling;
+  if(!dots) return;
+  const idx = Math.round(scrollEl.scrollLeft / (scrollEl.scrollWidth / scrollEl.children.length));
+  dots.querySelectorAll('.album-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+}
+</script>
+</body>
+</html>
