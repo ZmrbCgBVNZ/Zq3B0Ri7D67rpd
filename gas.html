@@ -26,7 +26,7 @@ body.guide-mode .header{background:linear-gradient(135deg,#2D6A4F,#52B788);box-s
 #loading-overlay{position:fixed;inset:0;background:rgba(245,246,250,0.95);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;transition: opacity 0.3s ease}
 .loader-spinner{width:48px;height:48px;border:5px solid #dce8f4;border-top-color:var(--fuji);border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.error-card{background:#fff;border-radius:20px;padding:24px;max-width:320px;width:90%;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.1)}
+.error-card{background:#fff;border-radius:20px;padding:24px;max-width:400px;width:90%;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.1)}
 .retry-btn{background:var(--fuji);color:#fff;border:none;border-radius:12px;padding:10px 20px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;margin-top:16px;transition:0.2s}
 .retry-btn:hover{opacity:0.9}
 
@@ -234,8 +234,11 @@ body.guide-mode .food-nav-dot.active{background:var(--guide)}
   <div style="font-size:16px;color:#555;font-weight:500;" id="loading-text">🌍 正在從 Google Sheets 載入自由行資料…</div>
   <div class="error-card" id="error-card" style="display:none;">
     <div style="font-size:40px;margin-bottom:12px">📡</div>
-    <div style="font-size:18px;font-weight:700;color:#2d3a4a;margin-bottom:8px">連線讀取失敗</div>
-    <div style="font-size:14px;color:#777;line-height:1.6;" id="error-message">無法連結至雲端資料庫，請檢查您的網路或 Apps Script 部署網址是否正確。</div>
+    <div style="font-size:18px;font-weight:700;color:#d9534f;margin-bottom:8px">資料庫讀取失敗</div>
+    <div style="font-size:14px;color:#555;line-height:1.6;text-align:left;background:#fcf8e3;border:1px solid #faebcc;padding:12px;border-radius:10px;margin:12px 0;" id="error-message">無法連結至雲端資料庫，請檢查您的網路或 Apps Script 部署網址是否正確。</div>
+    <div style="font-size:12px;color:#777;margin-bottom:16px;text-align:left;">
+      💡 <b>提示：</b>如果是首次設定，請確認 Google Apps Script 部署時的<b>「誰有存取權」</b>有設為<b>「所有人 (Anyone)」</b>。
+    </div>
     <button class="retry-btn" onclick="retryConnection()">🔄 重新連線</button>
   </div>
 </div>
@@ -328,8 +331,8 @@ body.guide-mode .food-nav-dot.active{background:var(--guide)}
 </div>
 
 <script>
-// GAS 串接 API 網址
-const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwDFWla8ISVAkh-IpbhXOWtNFXNga40hZRmvezpP0sXIHScinBpaEwvTq3Dymq6GG9Y/exec";
+// GAS 串接 API 網址 (更新為您部署的新連結)
+const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwvFkRs_iZlDEKaXU5r6159TPyAx4FXvb7XW8Oei7wnav33c1MLGUGfDcS6e1xKj5IR/exec";
 
 let cachedTripData = null;
 
@@ -337,8 +340,53 @@ let cachedTripData = null;
 async function loadTripData() {
   try {
     const res = await fetch(GAS_API_URL);
-    if (!res.ok) throw new Error('Network response was not ok');
+    if (!res.ok) throw new Error(`HTTP 錯誤! 狀態碼: ${res.status}`);
+    
     const data = await res.json();
+    
+    // 自定義安全防護：若 GAS 端回傳 try...catch 捕捉的錯誤
+    if (data.error) {
+      throw new Error(`雲端指令碼錯誤: ${data.error}`);
+    }
+    
+    // ==========================================
+    // 🛡️ 資料安全常態化機制 (Data Normalization)
+    // 強制將任何傳回來的欄位類型轉化為安全的字串
+    // ==========================================
+    if (data.tour && Array.isArray(data.tour)) {
+      data.tour.forEach(item => {
+        const fields = ['start_time', 'end_time', 'spot_title', 'category', 'image_url', 'description', 'tip', 'tag', 'more_text', 'more_img', 'map_url', 'guide_text', 'guide_img'];
+        fields.forEach(f => {
+          item[f] = (item[f] !== undefined && item[f] !== null) ? String(item[f]) : '';
+        });
+      });
+    }
+    if (data.info && Array.isArray(data.info)) {
+      data.info.forEach(item => {
+        const fields = ['Day', 'Daytitle', 'Daytext'];
+        fields.forEach(f => {
+          item[f] = (item[f] !== undefined && item[f] !== null) ? String(item[f]) : '';
+        });
+      });
+    }
+    if (data.gbook && Array.isArray(data.gbook)) {
+      data.gbook.forEach(item => {
+        const fields = ['gbook_title', 'gbook_subtitle', 'gbook_subemoji', 'gbook_text'];
+        fields.forEach(f => {
+          item[f] = (item[f] !== undefined && item[f] !== null) ? String(item[f]) : '';
+        });
+      });
+    }
+    if (data.todo && Array.isArray(data.todo)) {
+      data.todo.forEach(item => {
+        const fields = ['todo_day', 'todo_list'];
+        fields.forEach(f => {
+          item[f] = (item[f] !== undefined && item[f] !== null) ? String(item[f]) : '';
+        });
+      });
+    }
+    // ==========================================
+    
     cachedTripData = data;
     
     // 開始進行動態頁面渲染
@@ -360,7 +408,7 @@ async function loadTripData() {
     document.getElementById('loader-spinner').style.display = 'none';
     document.getElementById('loading-text').style.display = 'none';
     document.getElementById('error-card').style.display = 'block';
-    document.getElementById('error-message').textContent = `錯誤詳情：${error.message}，請確認 Apps Script 服務已啟用並允許無權限存取 (Anyone)。`;
+    document.getElementById('error-message').textContent = `${error.message}`;
   }
 }
 
@@ -784,7 +832,7 @@ function renderTodoList(info, todo) {
     panel.className = `todo-panel ${activeClass}`;
     panel.id = `todo-${dayInfo.Day}`;
     
-    // 過濾出屬於該天數的 todo
+    // 過濾出屬於該天數的 todo (對應欄位: todo_day)
     const dayTodos = todo.filter(t => parseInt(t.todo_day) === parseInt(dayInfo.Day));
     
     let itemsHtml = '';
