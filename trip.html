@@ -745,17 +745,28 @@ function createCarouselCard(items, carouselId) {
 function createMiniAlbum(imgUrls, isGuide = false) {
   const dotColorClass = isGuide ? 'green' : '';
   const allUrls = imgUrls.map(u => u.trim());
+  const albumId = 'album-' + Math.random().toString(36).slice(2, 8);
+
   const slidesHtml = allUrls.map((url, idx) => `
-    <div class="album-slide" onclick="openLightbox(${JSON.stringify(allUrls)}, ${idx})">
-      <img src="${url}" alt="景點細節" style="cursor:zoom-in" onerror="this.parentElement.innerHTML='<div style=\\'display:flex;align-items:center;justify-content:center;height:100%;color:#aaa;font-size:13px\\'>📷 圖片載入失敗</div>'">
+    <div class="album-slide" data-album="${albumId}" data-idx="${idx}" style="cursor:zoom-in">
+      <img src="${url}" alt="景點細節" style="pointer-events:none" onerror="this.parentElement.style.background='#eee';this.style.display='none'">
     </div>
   `).join('');
-  
+
   const dotsHtml = allUrls.map((_, idx) => `
     <div class="album-dot ${dotColorClass} ${idx === 0 ? 'active' : ''}"></div>
   `).join('');
-  
+
   const label = isGuide ? '<div class="album-label green">🗺 導遊相簿</div>' : '';
+
+  // 用 setTimeout 延遲綁定，確保 DOM 已存在
+  setTimeout(() => {
+    document.querySelectorAll(`.album-slide[data-album="${albumId}"]`).forEach(el => {
+      el.addEventListener('click', () => {
+        openLightbox(allUrls, parseInt(el.dataset.idx));
+      });
+    });
+  }, 0);
 
   return `
     ${label}
