@@ -13,7 +13,6 @@ body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(
 body.guide-mode::before{background-image:radial-gradient(circle at 20% 20%,rgba(45,106,79,.08) 0,transparent 50%),radial-gradient(circle at 80% 80%,rgba(45,106,79,.06) 0,transparent 50%)}
 body.guide-mode{background:#F0F5F2}
 
-/* HEADER */
 .header{background:linear-gradient(135deg,#3B6FA0,#5B8FC0);color:#fff;padding:20px 16px 16px;text-align:center;position:relative;z-index:1;border-radius:0 0 24px 24px;box-shadow:0 4px 20px rgba(59,111,160,.3);transition:.4s}
 body.guide-mode .header{background:linear-gradient(135deg,#2D6A4F,#52B788);box-shadow:0 4px 20px rgba(45,106,79,.3)}
 .header-icon{font-size:32px;margin-bottom:4px;cursor:pointer;display:inline-block;user-select:none}
@@ -22,15 +21,12 @@ body.guide-mode .header{background:linear-gradient(135deg,#2D6A4F,#52B788);box-s
 .header .dates{display:inline-block;background:rgba(255,255,255,.2);border-radius:20px;padding:4px 14px;font-size:14px;margin-top:8px}
 .mode-badge{display:inline-block;background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.4);border-radius:20px;padding:3px 12px;font-size:12px;margin-top:6px;font-weight:700}
 
-/* SYSTEM LOADERS / ERRORS */
-#loading-overlay{position:fixed;inset:0;background:rgba(245,246,250,0.95);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;transition: opacity 0.3s ease}
+#loading-overlay{position:fixed;inset:0;background:rgba(245,246,250,0.95);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;transition:opacity 0.3s ease}
 .loader-spinner{width:48px;height:48px;border:5px solid #dce8f4;border-top-color:var(--fuji);border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .error-card{background:#fff;border-radius:20px;padding:24px;max-width:400px;width:90%;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.1)}
-.retry-btn{background:var(--fuji);color:#fff;border:none;border-radius:12px;padding:10px 20px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;margin-top:16px;transition:0.2s}
-.retry-btn:hover{opacity:0.9}
+.retry-btn{background:var(--fuji);color:#fff;border:none;border-radius:12px;padding:10px 20px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;margin-top:16px}
 
-/* MODAL */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;align-items:center;justify-content:center}
 .modal-overlay.show{display:flex}
 .modal{background:#fff;border-radius:20px;padding:24px;margin:20px;max-width:320px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.2)}
@@ -43,7 +39,6 @@ body.guide-mode .header{background:linear-gradient(135deg,#2D6A4F,#52B788);box-s
 .modal-btn.confirm.to-family{background:var(--fuji)}
 .modal-btn.cancel{background:#f0f2f4;color:#666}
 
-/* TABS */
 .tab-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e8eaed;display:flex;z-index:100;box-shadow:0 -4px 20px rgba(0,0,0,.08);border-radius:20px 20px 0 0}
 body.guide-mode .tab-bar{border-top:2px solid #52B788}
 .tab-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 0 12px;cursor:pointer;color:#999;font-size:13px;gap:3px}
@@ -54,7 +49,6 @@ body.guide-mode .tab-item.active{color:var(--guide)}
 .tab-content{display:none}
 .tab-content.active{display:block}
 
-/* DAY SELECTOR */
 .day-selector{display:flex;gap:8px;overflow-x:auto;padding:4px 0 12px;scrollbar-width:none}
 .day-selector::-webkit-scrollbar{display:none}
 .day-btn{flex-shrink:0;background:#fff;border:2px solid #e0e4ea;border-radius:20px;padding:8px 16px;font-family:'Zen Maru Gothic',sans-serif;font-size:14px;cursor:pointer;transition:.2s;color:#666;white-space:nowrap;line-height:1.4}
@@ -63,7 +57,6 @@ body.guide-mode .day-btn.active{background:var(--guide);border-color:var(--guide
 .day-panel{display:none}
 .day-panel.active{display:block}
 
-/* DAY HEADER */
 .day-header{background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:12px;border:1.5px solid var(--light-blue);display:flex;align-items:center;gap:12px}
 .day-badge{background:var(--fuji);color:#fff;border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;line-height:1.2;text-align:center;transition:.3s}
 body.guide-mode .day-badge{background:var(--guide)}
@@ -71,7 +64,6 @@ body.guide-mode .day-badge{background:var(--guide)}
 body.guide-mode .day-info h2{color:var(--guide)}
 .day-info p{font-size:14px;color:#888;margin-top:2px}
 
-/* TIMELINE */
 .timeline-item{display:flex;gap:10px;margin-bottom:12px}
 .time-col{flex-shrink:0;width:62px;display:flex;flex-direction:column;align-items:center;padding-top:14px}
 .time-badge{background:var(--light-blue);color:var(--fuji);border-radius:8px;padding:4px 5px;font-size:14px;font-weight:700;text-align:center;line-height:1.4;white-space:nowrap}
@@ -79,7 +71,7 @@ body.guide-mode .time-badge{background:#E8F5EE;color:var(--guide)}
 .time-line{flex:1;width:2px;background:#dce8f4;margin-top:6px;border-radius:2px}
 .timeline-item:last-child .time-line{display:none}
 
-/* SPOT CARD */
+/* ── SPOT CARD ── */
 .spot-card{background:#fff;border-radius:16px;padding:14px 14px 14px 18px;flex:1;border:1.5px solid #eef0f4;position:relative;overflow:hidden;min-width:0;display:flex;flex-direction:column;justify-content:center}
 .spot-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px}
 .spot-card.type-food::before{background:#F4A261}
@@ -88,10 +80,7 @@ body.guide-mode .time-badge{background:#E8F5EE;color:var(--guide)}
 .spot-card.type-activity::before{background:#5B8A5A}
 .spot-card.type-hotel::before{background:#7B6CA8}
 .spot-card.type-transport::before{background:#B8B0A8}
-
-/* ★ 修正：card-img 只在有圖時才渲染，不再用 src="" 佔位 */
 .card-img{width:100%;height:160px;object-fit:cover;border-radius:10px;margin-bottom:10px;display:block}
-
 .spot-header{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;flex-wrap:wrap}
 .cat-badge{font-size:11px;font-weight:700;border-radius:10px;padding:4px 10px;flex-shrink:0;margin-top:2px}
 .cat-food{background:#FFF0E6;color:#C06020}
@@ -102,30 +91,22 @@ body.guide-mode .time-badge{background:#E8F5EE;color:var(--guide)}
 .cat-transport{background:#F0EEF0;color:#606060}
 .spot-name{font-size:16px;font-weight:700;color:#2d3a4a;line-height:1.3;flex:1}
 .spot-desc{font-size:14px;color:#666;margin-top:4px;line-height:1.6}
-/* ★ 修正：確保空 desc 完全不佔空間 */
 .spot-desc:empty{display:none;margin:0;padding:0}
-
-/* HEADER ROW: name + buttons */
 .spot-header-btns{display:flex;align-items:center;gap:6px;flex-shrink:0;margin-top:2px}
 .icon-btn{width:30px;height:30px;border-radius:8px;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;transition:.2s}
 .icon-btn.always-show{display:flex;background:#F0F4FA;color:#3B6FA0}
-.icon-btn.always-show:hover{background:#DDE8F5}
 body.guide-mode .icon-btn.guide-only{display:flex;background:#E8F5EE}
 .icon-btn.guide-only.active{background:#2D6A4F}
 
-/* 了解更多 panel */
 .more-panel{display:none;margin:10px 0 0 8px;border-radius:12px;overflow:hidden;border:1.5px solid #D0E4F8}
 .more-panel.open{display:block}
 .more-inner{background:#F5F9FF;padding:12px}
 .more-text{font-size:14px;color:#2d3a4a;line-height:1.8;margin-bottom:10px;white-space:pre-line}
-
-/* 導遊備註 panel */
 .guide-panel{display:none;margin:8px 0 0 8px;border-radius:12px;overflow:hidden;border:1.5px solid #B7E4C7}
 .guide-panel.open{display:block}
 .guide-inner{background:#F0FAF4;padding:12px}
 .guide-note-text{font-size:13px;color:#2D6A4F;line-height:1.7;margin-bottom:10px;white-space:pre-line}
 
-/* SHARED ALBUM */
 .album-label{font-size:12px;font-weight:700;color:#5580A0;margin-bottom:6px;display:flex;align-items:center;gap:4px}
 .album-label.green{color:#2D6A4F}
 .album-scroll{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px 0 6px;scroll-snap-type:x mandatory}
@@ -138,38 +119,31 @@ body.guide-mode .icon-btn.guide-only{display:flex;background:#E8F5EE}
 .album-dot.green{background:#B7E4C7}
 .album-dot.green.active{background:#2D6A4F}
 
-/* TAGS */
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 8px 8px}
 .tag{font-size:12px;font-weight:700;border-radius:10px;padding:4px 10px}
 .tag-eat{background:#FEF3E2;color:#D07020}
 .tag-buy{background:#FCE8EC;color:#C03050}
 .tag-photo{background:#E3EEF8;color:#1060A0}
 .tag-tip{background:#E8F4E8;color:#207030}
-
 .tips-box{margin:8px 0 4px 8px;display:flex;flex-direction:column;gap:6px}
 .tip-row{background:#F0F6FF;border-radius:10px;padding:9px 12px;font-size:14px;color:#3B6FA0;display:flex;gap:6px;align-items:flex-start}
 .tip-icon{font-size:15px;flex-shrink:0;margin-top:1px}
-
 .map-btn{display:flex;align-items:center;gap:5px;background:var(--fuji);color:#fff;border:none;border-radius:12px;padding:9px 14px;font-family:'Zen Maru Gothic',sans-serif;font-size:14px;cursor:pointer;text-decoration:none;justify-content:center;margin:10px 0 0 8px;width:calc(100% - 8px)}
 body.guide-mode .map-btn{background:var(--guide)}
-
-/* 了解更多 link */
 .more-link{display:inline-flex;align-items:center;gap:4px;margin:8px 0 0 8px;font-size:14px;color:var(--fuji);cursor:pointer;font-weight:700;background:none;border:none;font-family:'Zen Maru Gothic',sans-serif;padding:0;text-decoration:underline;text-underline-offset:3px}
 body.guide-mode .more-link{color:var(--guide)}
 
-/* FOOD CAROUSEL */
+/* ── FOOD CAROUSEL (time-slot multiple items) ── */
 .food-carousel-wrap{flex:1;min-width:0}
 .food-carousel{display:flex;overflow-x:auto;gap:12px;scroll-snap-type:x mandatory;scrollbar-width:none;padding:2px 2px 6px}
 .food-carousel::-webkit-scrollbar{display:none}
 .food-card{flex-shrink:0;width:calc(100% - 4px);scroll-snap-align:start;background:#fff;border-radius:16px;border:1.5px solid #eef0f4;overflow:hidden;position:relative}
 .food-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px 0 0 4px;background:#F4A261}
-/* ★ 修正：food-card-img 只在有圖時才渲染 */
 .food-card-img{width:100%;height:150px;object-fit:cover;display:block}
 .food-card-body{padding:12px 14px}
 .food-card-header{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px}
 .food-card-name{font-size:16px;font-weight:700;color:#2d3a4a;flex:1;line-height:1.3}
 .food-card-desc{font-size:14px;color:#666;line-height:1.6;margin-bottom:6px}
-/* ★ 修正：food-card-desc 為空時完全隱藏 */
 .food-card-desc:empty{display:none;margin:0;padding:0}
 .food-nav{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:6px}
 .food-nav-btn{background:var(--fuji);color:#fff;border:none;border-radius:50%;width:30px;height:30px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
@@ -180,7 +154,25 @@ body.guide-mode .food-nav-btn{background:var(--guide)}
 .food-nav-dot.active{background:var(--fuji);width:16px;border-radius:3px}
 body.guide-mode .food-nav-dot.active{background:var(--guide)}
 
-/* GUIDE TODO */
+/* ── MULTI-VALUE SPOT CAROUSEL (new) ── */
+/* Wraps a single timeline slot where spot_title etc. have | separated values */
+.mv-carousel-wrap{flex:1;min-width:0}
+.mv-carousel{display:flex;overflow-x:auto;gap:0;scroll-snap-type:x mandatory;scrollbar-width:none;padding:0}
+.mv-carousel::-webkit-scrollbar{display:none}
+/* Each slide is a full spot-card */
+.mv-slide{flex-shrink:0;width:100%;scroll-snap-align:start}
+.mv-nav{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:8px}
+.mv-nav-btn{background:var(--fuji);color:#fff;border:none;border-radius:50%;width:30px;height:30px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
+body.guide-mode .mv-nav-btn{background:var(--guide)}
+.mv-nav-btn:disabled{background:#ddd;cursor:default}
+.mv-nav-dots{display:flex;gap:5px}
+.mv-nav-dot{width:6px;height:6px;border-radius:50%;background:#dce8f4;transition:.2s}
+.mv-nav-dot.active{background:var(--fuji);width:16px;border-radius:3px}
+body.guide-mode .mv-nav-dot.active{background:var(--guide)}
+/* counter badge on top-right of carousel */
+.mv-counter{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.45);color:#fff;font-size:11px;font-weight:700;border-radius:10px;padding:3px 8px;pointer-events:none;z-index:2}
+
+/* ── GUIDE TODO ── */
 .todo-day-selector{display:flex;gap:8px;overflow-x:auto;padding:4px 0 12px;scrollbar-width:none}
 .todo-day-selector::-webkit-scrollbar{display:none}
 .todo-day-btn{flex-shrink:0;background:#fff;border:2px solid #e0e4ea;border-radius:20px;padding:8px 16px;font-family:'Zen Maru Gothic',sans-serif;font-size:14px;cursor:pointer;color:#666;white-space:nowrap;line-height:1.4}
@@ -201,7 +193,6 @@ body.guide-mode .food-nav-dot.active{background:var(--guide)}
 .todo-text{font-size:14px;color:#2d3a4a;line-height:1.5}
 .todo-item.done .todo-text{color:#aaa;text-decoration:line-through}
 
-/* GUIDE SECTION */
 .guide-section{background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:12px;border:1.5px solid #eef0f4}
 .guide-title{font-size:16px;font-weight:700;color:var(--fuji);margin-bottom:10px;display:flex;align-items:center;gap:6px}
 .guide-item{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid #f0f2f4;font-size:14px;color:#555;align-items:flex-start}
@@ -209,7 +200,6 @@ body.guide-mode .food-nav-dot.active{background:var(--guide)}
 .guide-item-icon{font-size:18px;flex-shrink:0;margin-top:1px}
 .guide-item strong{color:#2d3a4a;display:block;font-size:14px}
 
-/* WEATHER */
 .weather-card{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;border:1.5px solid #eef0f4;text-align:center}
 .weather-temp{font-size:42px;font-weight:700;color:var(--fuji)}
 .weather-sub{font-size:14px;color:#888;margin-top:4px}
@@ -234,17 +224,14 @@ body.guide-mode .food-nav-dot.active{background:var(--guide)}
 </head>
 <body>
 
-<!-- 全螢幕讀取 / 錯誤提示頁面 -->
 <div id="loading-overlay">
   <div class="loader-spinner" id="loader-spinner"></div>
   <div style="font-size:16px;color:#555;font-weight:500;" id="loading-text">🌍 正在從 Google Sheets 載入自由行資料…</div>
   <div class="error-card" id="error-card" style="display:none;">
     <div style="font-size:40px;margin-bottom:12px">📡</div>
     <div style="font-size:18px;font-weight:700;color:#d9534f;margin-bottom:8px">資料庫讀取失敗</div>
-    <div style="font-size:14px;color:#555;line-height:1.6;text-align:left;background:#fcf8e3;border:1px solid #faebcc;padding:12px;border-radius:10px;margin:12px 0;" id="error-message">無法連結至雲端資料庫，請檢查您的網路或 Apps Script 部署網址是否正確。</div>
-    <div style="font-size:12px;color:#777;margin-bottom:16px;text-align:left;">
-      💡 <b>提示：</b>如果是首次設定，請確認 Google Apps Script 部署時的<b>「誰有存取權」</b>有設為<b>「所有人 (Anyone)」</b>。
-    </div>
+    <div style="font-size:14px;color:#555;line-height:1.6;text-align:left;background:#fcf8e3;border:1px solid #faebcc;padding:12px;border-radius:10px;margin:12px 0;" id="error-message">無法連結至雲端資料庫。</div>
+    <div style="font-size:12px;color:#777;margin-bottom:16px;text-align:left;">💡 <b>提示：</b>請確認 Google Apps Script 部署時的<b>「誰有存取權」</b>有設為<b>「所有人 (Anyone)」</b>。</div>
     <button class="retry-btn" onclick="retryConnection()">🔄 重新連線</button>
   </div>
 </div>
@@ -270,14 +257,10 @@ body.guide-mode .food-nav-dot.active{background:var(--guide)}
 </div>
 
 <div class="content">
-
-  <!-- ===== 行程頁籤 ===== -->
   <div class="tab-content active" id="tab-itinerary">
     <div class="day-selector" id="day-selector-container"></div>
     <div id="day-panels-container"></div>
   </div>
-
-  <!-- ===== 指南 / 待辦 頁籤 ===== -->
   <div class="tab-content" id="tab-guide">
     <div id="family-guide"></div>
     <div id="guide-todo" style="display:none">
@@ -285,8 +268,6 @@ body.guide-mode .food-nav-dot.active{background:var(--guide)}
       <div id="todo-panels-container"></div>
     </div>
   </div>
-
-  <!-- ===== 天氣預報 頁籤 ===== -->
   <div class="tab-content" id="tab-weather">
     <div id="weather-loading" class="weather-loading">⏳ 正在讀取岡山天氣資料…</div>
     <div id="weather-error" class="weather-error" style="display:none"></div>
@@ -317,7 +298,6 @@ body.guide-mode .food-nav-dot.active{background:var(--guide)}
       <div class="guide-item"><span class="guide-item-icon">👟</span><div><strong>舒適步行鞋</strong>直島多步行，鞋底要軟</div></div>
     </div>
   </div>
-
 </div>
 
 <div class="tab-bar">
@@ -328,7 +308,6 @@ body.guide-mode .food-nav-dot.active{background:var(--guide)}
 
 <script>
 const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz0nIFdtMcWDsBB3hP-wN2QyS88P6OWlXl6AfbbxrKfJGchQvwc9KFt0KqLWadkeuBZ/exec";
-
 let cachedTripData = null;
 const CACHE_KEY = 'tripData_okayama';
 const CACHE_TTL = 60 * 60 * 1000;
@@ -356,38 +335,21 @@ async function fetchAndCache(silent) {
     const data = await res.json();
     if (data.error) throw new Error(`雲端指令碼錯誤: ${data.error}`);
 
-    if (data.tour && Array.isArray(data.tour)) {
-      data.tour.forEach(item => {
-        ['start_time','end_time','spot_title','category','image_url','description','tip','tag','more_text','more_img','map_url','guide_text','guide_img'].forEach(f => {
+    const strFields = {
+      tour: ['start_time','end_time','spot_title','category','image_url','description','tip','tag','more_text','more_img','map_url','guide_text','guide_img'],
+      info: ['Day','Daytitle','Daytext'],
+      gbook: ['gbook_title','gbook_subtitle','gbook_subemoji','gbook_text'],
+      todo: ['todo_day','todo_list']
+    };
+    for (const [key, fields] of Object.entries(strFields)) {
+      if (data[key] && Array.isArray(data[key])) {
+        data[key].forEach(item => fields.forEach(f => {
           item[f] = (item[f] !== undefined && item[f] !== null) ? String(item[f]) : '';
-        });
-      });
+        }));
+      }
     }
-    if (data.info && Array.isArray(data.info)) {
-      data.info.forEach(item => {
-        ['Day','Daytitle','Daytext'].forEach(f => {
-          item[f] = (item[f] !== undefined && item[f] !== null) ? String(item[f]) : '';
-        });
-      });
-    }
-    if (data.gbook && Array.isArray(data.gbook)) {
-      data.gbook.forEach(item => {
-        ['gbook_title','gbook_subtitle','gbook_subemoji','gbook_text'].forEach(f => {
-          item[f] = (item[f] !== undefined && item[f] !== null) ? String(item[f]) : '';
-        });
-      });
-    }
-    if (data.todo && Array.isArray(data.todo)) {
-      data.todo.forEach(item => {
-        ['todo_day','todo_list'].forEach(f => {
-          item[f] = (item[f] !== undefined && item[f] !== null) ? String(item[f]) : '';
-        });
-      });
-    }
-
     cachedTripData = data;
     try { localStorage.setItem(CACHE_KEY, JSON.stringify({ data, timestamp: Date.now() })); } catch(e) {}
-
     if (!silent) {
       renderAll(data);
       document.getElementById('loading-overlay').style.opacity = '0';
@@ -400,7 +362,7 @@ async function fetchAndCache(silent) {
     document.getElementById('loader-spinner').style.display = 'none';
     document.getElementById('loading-text').style.display = 'none';
     document.getElementById('error-card').style.display = 'block';
-    document.getElementById('error-message').textContent = `${error.message}`;
+    document.getElementById('error-message').textContent = error.message;
   }
 }
 
@@ -420,20 +382,44 @@ function retryConnection() {
   loadTripData();
 }
 
+// ── helpers ───────────────────────────────────────
+function splitPipe(str) {
+  return str ? str.split('|').map(s => s.trim()) : [''];
+}
+// Returns true if any of the key multi-value fields has more than one entry
+function isMultiValue(item) {
+  const titles = splitPipe(item.spot_title);
+  return titles.length > 1;
+}
+
+function descHtml(desc, extraClass = '') {
+  if (!desc || !desc.trim()) return '';
+  return `<div class="spot-desc${extraClass ? ' ' + extraClass : ''}">${desc}</div>`;
+}
+
+function cardImgHtml(url, title, cssClass, height) {
+  const urls = url ? url.split('|').map(s => s.trim()).filter(s => s) : [];
+  if (!urls.length) return '';
+  if (urls.length === 1) return `<img class="${cssClass}" src="${urls[0]}" alt="${title}" style="height:${height}px" onerror="this.style.display='none'">`;
+  return createMiniAlbum(urls, false);
+}
+
+// ── DAY SELECTOR ──────────────────────────────────
 function renderDaySelector(info) {
-  const container = document.getElementById('day-selector-container');
-  container.innerHTML = '';
+  const c = document.getElementById('day-selector-container');
+  c.innerHTML = '';
   info.forEach((item, idx) => {
-    const dateMatch = item.Daytext ? item.Daytext.match(/(\d+\/\d+)/) : null;
-    const dateStr = dateMatch ? dateMatch[0] : '';
+    const dm = item.Daytext ? item.Daytext.match(/(\d+\/\d+)/) : null;
+    const ds = dm ? dm[0] : '';
     const btn = document.createElement('button');
     btn.className = `day-btn ${idx === 0 ? 'active' : ''}`;
-    btn.onclick = (e) => switchDay(item.Day, e.currentTarget);
-    btn.innerHTML = `Day ${item.Day}<br><span style="font-size:11px">${dateStr}</span>`;
-    container.appendChild(btn);
+    btn.onclick = e => switchDay(item.Day, e.currentTarget);
+    btn.innerHTML = `Day ${item.Day}<br><span style="font-size:11px">${ds}</span>`;
+    c.appendChild(btn);
   });
 }
 
+// ── ITINERARY ─────────────────────────────────────
 function renderItinerary(info, tour) {
   const container = document.getElementById('day-panels-container');
   container.innerHTML = '';
@@ -450,11 +436,11 @@ function renderItinerary(info, tour) {
           <p>${dayInfo.Daytext || ''}</p>
         </div>
       </div>
-      <div class="timeline-container" id="timeline-day-${dayInfo.Day}"></div>
-    `;
+      <div class="timeline-container" id="timeline-day-${dayInfo.Day}"></div>`;
     container.appendChild(panel);
   });
 
+  // Group by day + time slot
   const groupedTour = {};
   tour.forEach(item => {
     const key = `day_${item.tour_day}_time_${item.start_time || ''}_${item.end_time || ''}`;
@@ -478,114 +464,77 @@ function renderItinerary(info, tour) {
     tc.className = 'time-col';
     tc.innerHTML = `<div class="time-badge">${group[0].start_time || ''}<br>↓<br>${group[0].end_time || ''}</div><div class="time-line"></div>`;
     ti.appendChild(tc);
-    ti.appendChild(group.length === 1 ? createSpotCard(group[0]) : createCarouselCard(group, `food-d${day}-${(group[0].start_time||'').replace(':','')}`));
+
+    let cardEl;
+    if (group.length === 1 && isMultiValue(group[0])) {
+      // Single DB row but has pipe-separated multi values → multi-value carousel
+      cardEl = createMultiValueCarousel(group[0]);
+    } else if (group.length > 1) {
+      // Multiple DB rows at same time → original food carousel
+      cardEl = createCarouselCard(group, `food-d${day}-${(group[0].start_time||'').replace(':','')}`);
+    } else {
+      // Single item, single value
+      cardEl = createSpotCard(group[0]);
+    }
+    ti.appendChild(cardEl);
     tlc.appendChild(ti);
   });
 }
 
-// ── 共用 description HTML 產生器 ──────────────────
-// ★ 修正：trim() 後為空字串時完全不輸出任何 HTML，杜絕空白殘留
-function descHtml(desc, extraClass = '') {
-  if (!desc || !desc.trim()) return '';
-  return `<div class="spot-desc${extraClass ? ' ' + extraClass : ''}">${desc}</div>`;
-}
+// ── MULTI-VALUE CAROUSEL (pipe-separated fields in ONE row) ──────────────────
+function createMultiValueCarousel(item) {
+  const titles = splitPipe(item.spot_title);
+  const descs = splitPipe(item.description);
+  const tags = splitPipe(item.tag);
+  const maps = splitPipe(item.map_url);
+  const imgs = splitPipe(item.image_url);
+  const cats = splitPipe(item.category);
+  // tip, more_text, more_img, guide_text, guide_img are shared (not split per slide)
 
-// ★ 修正：只在 url 非空時才輸出 img tag，避免空 src 產生佔位空白
-function cardImgHtml(url, title, cssClass, height) {
-  const urls = url ? url.split('|').map(s => s.trim()).filter(s => s) : [];
-  if (urls.length === 0) return '';
-  if (urls.length === 1) {
-    return `<img class="${cssClass}" src="${urls[0]}" alt="${title}" style="height:${height}px" onerror="this.style.display='none'">`;
-  }
-  return createMiniAlbum(urls, false);
-}
+  const count = titles.length;
+  const uid = 'mv-' + Math.random().toString(36).slice(2, 7);
 
-function createSpotCard(item) {
-  const card = document.createElement('div');
-  card.className = `spot-card ${getCardTypeClass(item.category)}`;
-
-  // ★ 使用修正後的 cardImgHtml，無圖時完全不輸出
-  const imgHtml = cardImgHtml(item.image_url, item.spot_title, 'card-img', 160);
-
-  const catClass = getCategoryBadgeClass(item.category);
-  const catBadgeHtml = (item.category && item.category.trim())
-    ? `<span class="cat-badge ${catClass}">${item.category}</span>` : '';
-
-  let tipsHtml = '';
-  if (item.tip && item.tip.trim()) {
-    tipsHtml = `<div class="tips-box">${item.tip.split('|').map(t => `<div class="tip-row"><span class="tip-icon">💡</span>${t.trim()}</div>`).join('')}</div>`;
-  }
-
-  let tagsHtml = '';
-  if (item.tag && item.tag.trim()) {
-    tagsHtml = `<div class="tags">${item.tag.split('|').map(t => `<span class="tag ${getTagStyleClass(t)}">${t.trim()}</span>`).join('')}</div>`;
-  }
-
-  let moreImgHtml = (item.more_img && item.more_img.trim()) ? createMiniAlbum(item.more_img.split('|'), false) : '';
-  const hasMore = (item.more_text && item.more_text.trim()) || moreImgHtml;
-  const moreLinkHtml = hasMore ? `
-    <button class="more-link" onclick="toggleMore(this)">📖 了解更多 ▾</button>
-    <div class="more-panel"><div class="more-inner">
-      ${item.more_text ? `<div class="more-text">${item.more_text}</div>` : ''}
-      ${moreImgHtml}
-    </div></div>` : '';
-
-  let guideImgHtml = (item.guide_img && item.guide_img.trim()) ? createMiniAlbum(item.guide_img.split('|'), true) : '';
-  const hasGuide = (item.guide_text && item.guide_text.trim()) || guideImgHtml;
-  const guideBtnHtml = hasGuide ? `<button class="icon-btn guide-only" onclick="toggleGuide(this)" title="導遊備註">📋</button>` : '';
-  const guidePanelHtml = hasGuide ? `
-    <div class="guide-panel"><div class="guide-inner">
-      ${item.guide_text ? `<div class="guide-note-text">${item.guide_text}</div>` : ''}
-      ${guideImgHtml}
-    </div></div>` : '';
-
-  const mapBtnHtml = (item.map_url && item.map_url.trim())
-    ? `<a class="map-btn" href="${item.map_url}" target="_blank">🗺 Google Maps 導航</a>` : '';
-
-  card.innerHTML = `
-    ${imgHtml}
-    <div class="spot-header">
-      ${catBadgeHtml}
-      <span class="spot-name">${item.spot_title || ''}</span>
-      <div class="spot-header-btns">${guideBtnHtml}</div>
-    </div>
-    ${descHtml(item.description)}
-    ${tagsHtml}
-    ${tipsHtml}
-    ${moreLinkHtml}
-    ${guidePanelHtml}
-    ${mapBtnHtml}
-  `;
-  return card;
-}
-
-function createCarouselCard(items, carouselId) {
   const wrap = document.createElement('div');
-  wrap.className = 'food-carousel-wrap';
+  wrap.className = 'mv-carousel-wrap';
+  wrap.style.position = 'relative';
+
+  // counter badge
+  const badge = document.createElement('div');
+  badge.className = 'mv-counter';
+  badge.id = `${uid}-badge`;
+  badge.textContent = `1 / ${count}`;
+  wrap.appendChild(badge);
+
   const carousel = document.createElement('div');
-  carousel.className = 'food-carousel';
-  carousel.id = carouselId;
-  carousel.setAttribute('onscroll', `syncFoodNav(this,'fn-${carouselId}')`);
+  carousel.className = 'mv-carousel';
+  carousel.id = uid;
 
-  items.forEach(item => {
+  for (let i = 0; i < count; i++) {
+    const slide = document.createElement('div');
+    slide.className = 'mv-slide';
+
+    const titleI = titles[i] || '';
+    const descI = (descs[i] || descs[0] || '');
+    const tagI = (tags[i] || tags[0] || '');
+    const mapI = (maps[i] || maps[0] || '');
+    const imgI = (imgs[i] || imgs[0] || '');
+    const catI = (cats[i] || cats[0] || '');
+
+    // Build a pseudo spot-card inside the slide
     const card = document.createElement('div');
-    card.className = 'food-card';
+    card.className = `spot-card ${getCardTypeClass(catI)}`;
 
-    // ★ 使用修正後的 cardImgHtml，無圖時完全不輸出
-    const imgHtml = cardImgHtml(item.image_url, item.spot_title, 'food-card-img', 150);
-
-    const catClass = getCategoryBadgeClass(item.category);
-    const catBadgeHtml = (item.category && item.category.trim())
-      ? `<span class="cat-badge ${catClass}">${item.category}</span>` : '';
+    const imgHtml = cardImgHtml(imgI, titleI, 'card-img', 160);
+    const catClass = getCategoryBadgeClass(catI);
+    const catBadgeHtml = catI.trim() ? `<span class="cat-badge ${catClass}">${catI}</span>` : '';
 
     let tipsHtml = '';
     if (item.tip && item.tip.trim()) {
       tipsHtml = `<div class="tips-box">${item.tip.split('|').map(t => `<div class="tip-row"><span class="tip-icon">💡</span>${t.trim()}</div>`).join('')}</div>`;
     }
-
     let tagsHtml = '';
-    if (item.tag && item.tag.trim()) {
-      tagsHtml = `<div class="tags">${item.tag.split('|').map(t => `<span class="tag ${getTagStyleClass(t)}">${t.trim()}</span>`).join('')}</div>`;
+    if (tagI.trim()) {
+      tagsHtml = `<div class="tags">${tagI.split(',').map(t => `<span class="tag ${getTagStyleClass(t)}">${t.trim()}</span>`).join('')}</div>`;
     }
 
     let moreImgHtml = (item.more_img && item.more_img.trim()) ? createMiniAlbum(item.more_img.split('|'), false) : '';
@@ -599,32 +548,120 @@ function createCarouselCard(items, carouselId) {
 
     let guideImgHtml = (item.guide_img && item.guide_img.trim()) ? createMiniAlbum(item.guide_img.split('|'), true) : '';
     const hasGuide = (item.guide_text && item.guide_text.trim()) || guideImgHtml;
-    const guideBtnHtml = hasGuide ? `<button class="icon-btn guide-only" onclick="toggleGuide(this)">📋</button>` : '';
+    const guideBtnHtml = hasGuide ? `<button class="icon-btn guide-only" onclick="toggleGuide(this)" title="導遊備註">📋</button>` : '';
     const guidePanelHtml = hasGuide ? `
       <div class="guide-panel"><div class="guide-inner">
         ${item.guide_text ? `<div class="guide-note-text">${item.guide_text}</div>` : ''}
         ${guideImgHtml}
       </div></div>` : '';
 
-    const mapBtnHtml = (item.map_url && item.map_url.trim())
-      ? `<a class="map-btn" href="${item.map_url}" target="_blank">🗺 導航</a>` : '';
+    const mapBtnHtml = mapI.trim() ? `<a class="map-btn" href="${mapI}" target="_blank">🗺 Google Maps 導航</a>` : '';
 
     card.innerHTML = `
       ${imgHtml}
-      <div class="food-card-body">
-        <div class="food-card-header">
-          ${catBadgeHtml}
-          <span class="food-card-name">${item.spot_title || ''}</span>
-          <div class="spot-header-btns">${guideBtnHtml}</div>
-        </div>
-        ${descHtml(item.description, 'food-card-desc')}
-        ${tagsHtml}
-        ${tipsHtml}
-        ${moreLinkHtml}
-        ${guidePanelHtml}
-        ${mapBtnHtml}
+      <div class="spot-header">
+        ${catBadgeHtml}
+        <span class="spot-name">${titleI}</span>
+        <div class="spot-header-btns">${guideBtnHtml}</div>
       </div>
-    `;
+      ${descHtml(descI)}
+      ${tagsHtml}
+      ${tipsHtml}
+      ${moreLinkHtml}
+      ${guidePanelHtml}
+      ${mapBtnHtml}`;
+
+    slide.appendChild(card);
+    carousel.appendChild(slide);
+  }
+
+  wrap.appendChild(carousel);
+
+  // dots + prev/next
+  const dotsHtml = Array.from({length: count}, (_, i) =>
+    `<div class="mv-nav-dot ${i === 0 ? 'active' : ''}"></div>`).join('');
+  const nav = document.createElement('div');
+  nav.className = 'mv-nav';
+  nav.id = `${uid}-nav`;
+  nav.innerHTML = `
+    <button class="mv-nav-btn" id="${uid}-prev" onclick="mvScroll('${uid}',-1)" disabled>‹</button>
+    <div class="mv-nav-dots" id="${uid}-dots">${dotsHtml}</div>
+    <button class="mv-nav-btn" id="${uid}-next" onclick="mvScroll('${uid}',1)" ${count<=1?'disabled':''}>›</button>`;
+  wrap.appendChild(nav);
+
+  // sync on scroll
+  carousel.addEventListener('scroll', () => mvSync(uid, count), { passive: true });
+
+  return wrap;
+}
+
+function mvScroll(uid, dir) {
+  const el = document.getElementById(uid);
+  const slideW = el.querySelector('.mv-slide').offsetWidth;
+  el.scrollBy({ left: dir * slideW, behavior: 'smooth' });
+}
+
+function mvSync(uid, count) {
+  const el = document.getElementById(uid);
+  const slideW = el.querySelector('.mv-slide')?.offsetWidth || 1;
+  const idx = Math.round(el.scrollLeft / slideW);
+  const dots = document.querySelectorAll(`#${uid}-dots .mv-nav-dot`);
+  dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+  const prevBtn = document.getElementById(`${uid}-prev`);
+  const nextBtn = document.getElementById(`${uid}-next`);
+  if (prevBtn) prevBtn.disabled = idx === 0;
+  if (nextBtn) nextBtn.disabled = idx >= count - 1;
+  const badge = document.getElementById(`${uid}-badge`);
+  if (badge) badge.textContent = `${idx + 1} / ${count}`;
+}
+
+// ── ORIGINAL FOOD CAROUSEL (multiple DB rows at same time) ───────────────────
+function createCarouselCard(items, carouselId) {
+  const wrap = document.createElement('div');
+  wrap.className = 'food-carousel-wrap';
+  const carousel = document.createElement('div');
+  carousel.className = 'food-carousel';
+  carousel.id = carouselId;
+  carousel.setAttribute('onscroll', `syncFoodNav(this,'fn-${carouselId}')`);
+
+  items.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'food-card';
+    const imgHtml = cardImgHtml(item.image_url, item.spot_title, 'food-card-img', 150);
+    const catClass = getCategoryBadgeClass(item.category);
+    const catBadgeHtml = (item.category && item.category.trim()) ? `<span class="cat-badge ${catClass}">${item.category}</span>` : '';
+    let tipsHtml = '';
+    if (item.tip && item.tip.trim()) {
+      tipsHtml = `<div class="tips-box">${item.tip.split('|').map(t => `<div class="tip-row"><span class="tip-icon">💡</span>${t.trim()}</div>`).join('')}</div>`;
+    }
+    let tagsHtml = '';
+    if (item.tag && item.tag.trim()) {
+      tagsHtml = `<div class="tags">${item.tag.split('|').map(t => `<span class="tag ${getTagStyleClass(t)}">${t.trim()}</span>`).join('')}</div>`;
+    }
+    let moreImgHtml = (item.more_img && item.more_img.trim()) ? createMiniAlbum(item.more_img.split('|'), false) : '';
+    const hasMore = (item.more_text && item.more_text.trim()) || moreImgHtml;
+    const moreLinkHtml = hasMore ? `
+      <button class="more-link" onclick="toggleMore(this)">📖 了解更多 ▾</button>
+      <div class="more-panel"><div class="more-inner">
+        ${item.more_text ? `<div class="more-text">${item.more_text}</div>` : ''}
+        ${moreImgHtml}
+      </div></div>` : '';
+    let guideImgHtml = (item.guide_img && item.guide_img.trim()) ? createMiniAlbum(item.guide_img.split('|'), true) : '';
+    const hasGuide = (item.guide_text && item.guide_text.trim()) || guideImgHtml;
+    const guideBtnHtml = hasGuide ? `<button class="icon-btn guide-only" onclick="toggleGuide(this)">📋</button>` : '';
+    const guidePanelHtml = hasGuide ? `
+      <div class="guide-panel"><div class="guide-inner">
+        ${item.guide_text ? `<div class="guide-note-text">${item.guide_text}</div>` : ''}
+        ${guideImgHtml}
+      </div></div>` : '';
+    const mapBtnHtml = (item.map_url && item.map_url.trim()) ? `<a class="map-btn" href="${item.map_url}" target="_blank">🗺 導航</a>` : '';
+    card.innerHTML = `
+      ${imgHtml}
+      <div class="food-card-body">
+        <div class="food-card-header">${catBadgeHtml}<span class="food-card-name">${item.spot_title || ''}</span><div class="spot-header-btns">${guideBtnHtml}</div></div>
+        ${descHtml(item.description, 'food-card-desc')}
+        ${tagsHtml}${tipsHtml}${moreLinkHtml}${guidePanelHtml}${mapBtnHtml}
+      </div>`;
     carousel.appendChild(card);
   });
 
@@ -635,35 +672,69 @@ function createCarouselCard(items, carouselId) {
   nav.innerHTML = `
     <button class="food-nav-btn" onclick="scrollFood('${carouselId}',-1,'fn-${carouselId}')" disabled>‹</button>
     <div class="food-nav-dots">${dotsHtml}</div>
-    <button class="food-nav-btn" onclick="scrollFood('${carouselId}',1,'fn-${carouselId}')">›</button>
-  `;
+    <button class="food-nav-btn" onclick="scrollFood('${carouselId}',1,'fn-${carouselId}')">›</button>`;
   wrap.appendChild(carousel);
   wrap.appendChild(nav);
   return wrap;
 }
 
+// ── SINGLE SPOT CARD ─────────────────────────────
+function createSpotCard(item) {
+  const card = document.createElement('div');
+  card.className = `spot-card ${getCardTypeClass(item.category)}`;
+  const imgHtml = cardImgHtml(item.image_url, item.spot_title, 'card-img', 160);
+  const catClass = getCategoryBadgeClass(item.category);
+  const catBadgeHtml = (item.category && item.category.trim()) ? `<span class="cat-badge ${catClass}">${item.category}</span>` : '';
+  let tipsHtml = '';
+  if (item.tip && item.tip.trim()) {
+    tipsHtml = `<div class="tips-box">${item.tip.split('|').map(t => `<div class="tip-row"><span class="tip-icon">💡</span>${t.trim()}</div>`).join('')}</div>`;
+  }
+  let tagsHtml = '';
+  if (item.tag && item.tag.trim()) {
+    tagsHtml = `<div class="tags">${item.tag.split('|').map(t => `<span class="tag ${getTagStyleClass(t)}">${t.trim()}</span>`).join('')}</div>`;
+  }
+  let moreImgHtml = (item.more_img && item.more_img.trim()) ? createMiniAlbum(item.more_img.split('|'), false) : '';
+  const hasMore = (item.more_text && item.more_text.trim()) || moreImgHtml;
+  const moreLinkHtml = hasMore ? `
+    <button class="more-link" onclick="toggleMore(this)">📖 了解更多 ▾</button>
+    <div class="more-panel"><div class="more-inner">
+      ${item.more_text ? `<div class="more-text">${item.more_text}</div>` : ''}
+      ${moreImgHtml}
+    </div></div>` : '';
+  let guideImgHtml = (item.guide_img && item.guide_img.trim()) ? createMiniAlbum(item.guide_img.split('|'), true) : '';
+  const hasGuide = (item.guide_text && item.guide_text.trim()) || guideImgHtml;
+  const guideBtnHtml = hasGuide ? `<button class="icon-btn guide-only" onclick="toggleGuide(this)" title="導遊備註">📋</button>` : '';
+  const guidePanelHtml = hasGuide ? `
+    <div class="guide-panel"><div class="guide-inner">
+      ${item.guide_text ? `<div class="guide-note-text">${item.guide_text}</div>` : ''}
+      ${guideImgHtml}
+    </div></div>` : '';
+  const mapBtnHtml = (item.map_url && item.map_url.trim()) ? `<a class="map-btn" href="${item.map_url}" target="_blank">🗺 Google Maps 導航</a>` : '';
+  card.innerHTML = `
+    ${imgHtml}
+    <div class="spot-header">${catBadgeHtml}<span class="spot-name">${item.spot_title || ''}</span><div class="spot-header-btns">${guideBtnHtml}</div></div>
+    ${descHtml(item.description)}
+    ${tagsHtml}${tipsHtml}${moreLinkHtml}${guidePanelHtml}${mapBtnHtml}`;
+  return card;
+}
+
+// ── MINI ALBUM ────────────────────────────────────
 function createMiniAlbum(imgUrls, isGuide = false) {
   const dotColorClass = isGuide ? 'green' : '';
   const allUrls = imgUrls.map(u => u.trim()).filter(u => u);
   if (!allUrls.length) return '';
   const albumId = 'album-' + Math.random().toString(36).slice(2, 8);
-
   const slidesHtml = allUrls.map((url, idx) => `
     <div class="album-slide" data-album="${albumId}" data-idx="${idx}" style="cursor:zoom-in">
       <img src="${url}" alt="景點細節" style="pointer-events:none" onerror="this.parentElement.style.background='#eee';this.style.display='none'">
     </div>`).join('');
-
-  const dotsHtml = allUrls.map((_, idx) => `
-    <div class="album-dot ${dotColorClass} ${idx === 0 ? 'active' : ''}"></div>`).join('');
-
+  const dotsHtml = allUrls.map((_, idx) => `<div class="album-dot ${dotColorClass} ${idx === 0 ? 'active' : ''}"></div>`).join('');
   const label = isGuide ? '<div class="album-label green">🗺 導遊相簿</div>' : '';
-
   setTimeout(() => {
     document.querySelectorAll(`.album-slide[data-album="${albumId}"]`).forEach(el => {
       el.addEventListener('click', () => openLightbox(allUrls, parseInt(el.dataset.idx)));
     });
   }, 0);
-
   return `${label}<div class="album-scroll">${slidesHtml}</div><div class="album-dots">${dotsHtml}</div>`;
 }
 
@@ -672,29 +743,24 @@ function openLightbox(urls, startIdx) {
   const overlay = document.createElement('div');
   overlay.id = 'lightbox';
   overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px';
-  overlay.onclick = (e) => { if (e.target === overlay) closeLightbox(); };
-
+  overlay.onclick = e => { if (e.target === overlay) closeLightbox(); };
   function render() {
     overlay.innerHTML = `
       <button onclick="closeLightbox()" style="position:absolute;top:16px;right:20px;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;z-index:1">✕</button>
       <div style="display:flex;align-items:center;gap:10px;width:100%;justify-content:center;padding:0 16px">
-        <button onclick="lbNav(-1)" style="background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:50%;width:38px;height:38px;font-size:20px;cursor:pointer;flex-shrink:0" ${cur===0?'disabled style="opacity:.3;cursor:default;background:rgba(255,255,255,.1)"':''}>‹</button>
+        <button onclick="lbNav(-1)" style="background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:50%;width:38px;height:38px;font-size:20px;cursor:pointer;flex-shrink:0" ${cur===0?'disabled style="opacity:.3"':''}>‹</button>
         <img src="${urls[cur]}" style="max-width:calc(100vw - 100px);max-height:75vh;border-radius:10px;object-fit:contain;display:block">
-        <button onclick="lbNav(1)" style="background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:50%;width:38px;height:38px;font-size:20px;cursor:pointer;flex-shrink:0" ${cur===urls.length-1?'disabled style="opacity:.3;cursor:default;background:rgba(255,255,255,.1)"':''}>›</button>
+        <button onclick="lbNav(1)" style="background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:50%;width:38px;height:38px;font-size:20px;cursor:pointer;flex-shrink:0" ${cur===urls.length-1?'disabled style="opacity:.3"':''}>›</button>
       </div>
       <div style="color:rgba(255,255,255,.6);font-size:13px">${cur+1} / ${urls.length}</div>`;
   }
-
-  window.lbNav = (dir) => { cur = Math.max(0, Math.min(urls.length-1, cur+dir)); render(); };
+  window.lbNav = dir => { cur = Math.max(0, Math.min(urls.length-1, cur+dir)); render(); };
   render();
   document.body.appendChild(overlay);
 }
+function closeLightbox() { const lb = document.getElementById('lightbox'); if (lb) lb.remove(); }
 
-function closeLightbox() {
-  const lb = document.getElementById('lightbox');
-  if (lb) lb.remove();
-}
-
+// ── GUIDE BOOK ────────────────────────────────────
 function renderGuideBook(gbook) {
   const container = document.getElementById('family-guide');
   container.innerHTML = '';
@@ -717,17 +783,17 @@ function renderGuideBook(gbook) {
   }
 }
 
+// ── TODO ──────────────────────────────────────────
 function renderTodoList(info, todo) {
   const dayContainer = document.getElementById('todo-day-selector-container');
   dayContainer.innerHTML = '';
   info.forEach((item, idx) => {
     const btn = document.createElement('button');
     btn.className = `todo-day-btn ${idx === 0 ? 'active' : ''}`;
-    btn.onclick = (e) => switchTodoDay(item.Day, e.currentTarget);
+    btn.onclick = e => switchTodoDay(item.Day, e.currentTarget);
     btn.innerHTML = `Day ${item.Day}<br><span style="font-size:11px">9/${26+parseInt(item.Day)}</span>`;
     dayContainer.appendChild(btn);
   });
-
   const panelContainer = document.getElementById('todo-panels-container');
   panelContainer.innerHTML = '';
   info.forEach((dayInfo, idx) => {
@@ -759,7 +825,7 @@ function renderTodoList(info, todo) {
   });
 }
 
-// ── 工具函數 ──────────────────────────────────────
+// ── CLASSIFIERS ───────────────────────────────────
 function getCardTypeClass(c) {
   if (!c) return 'type-sight';
   if (c.includes('食')||c.includes('吃')||c.includes('餐')) return 'type-food';
@@ -786,25 +852,22 @@ function getTagStyleClass(t) {
   return 'tag-tip';
 }
 
-// ── WEATHER ──────────────────────────────────────
-const WMO_ICON={0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',53:'🌦',55:'🌧',61:'🌧',63:'🌧',65:'🌧',71:'🌨',73:'🌨',75:'❄️',80:'🌦',81:'🌧',82:'⛈',95:'⛈',96:'⛈',99:'⛈'};
-const WMO_DESC={0:'晴天',1:'大致晴',2:'部分多雲',3:'陰天',45:'有霧',51:'毛毛雨',61:'小雨',63:'中雨',65:'大雨',80:'陣雨',82:'強陣雨',95:'雷雨'};
-const TRIP_START=new Date('2026-09-27');
-const TRIP_END=new Date('2026-10-01');
-
-async function loadWeather(){
-  try{
-    const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=34.6617&longitude=133.9344&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTokyo&forecast_days=16');
+// ── WEATHER ───────────────────────────────────────
+const WMO_ICON={0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',51:'🌦',53:'🌦',55:'🌧',61:'🌧',63:'🌧',65:'🌧',80:'🌦',81:'🌧',82:'⛈',95:'⛈'};
+const WMO_DESC={0:'晴天',1:'大致晴',2:'部分多雲',3:'陰天',51:'毛毛雨',61:'小雨',63:'中雨',65:'大雨',80:'陣雨',95:'雷雨'};
+const TRIP_START=new Date('2026-09-27'), TRIP_END=new Date('2026-10-01');
+async function loadWeather() {
+  try {
+    const r = await fetch('https://api.open-meteo.com/v1/forecast?latitude=34.6617&longitude=133.9344&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTokyo&forecast_days=16');
     renderWeather(await r.json());
-  }catch(e){
+  } catch(e) {
     document.getElementById('weather-loading').style.display='none';
     const el=document.getElementById('weather-error');
     el.style.display='block';
     el.textContent='⚠️ 天氣資料讀取失敗，請確認網路連線。';
   }
 }
-
-function renderWeather(d){
+function renderWeather(d) {
   document.getElementById('weather-loading').style.display='none';
   document.getElementById('weather-main').style.display='block';
   const c=d.current, code=c.weather_code;
@@ -822,16 +885,13 @@ function renderWeather(d){
   const noteEl=document.getElementById('w-note');
   if(tripDays.length>0){
     document.getElementById('w-forecast-title').textContent='📅 旅遊期間預報（9/27～10/1）';
-    noteEl.style.display='block';
-    noteEl.textContent='✅ 已顯示實際旅遊日期的天氣預報！';
-  }else{
+    noteEl.style.display='block'; noteEl.textContent='✅ 已顯示實際旅遊日期的天氣預報！';
+  } else {
     document.getElementById('w-forecast-title').textContent='📅 近期天氣（旅遊日尚在預報範圍外）';
-    noteEl.style.display='block';
-    noteEl.textContent='ℹ️ 旅遊日 2026/9/27～10/1 尚未在預報範圍內，出發前 2 週再查可獲得準確預報！';
+    noteEl.style.display='block'; noteEl.textContent='ℹ️ 旅遊日 2026/9/27～10/1 尚未在預報範圍內，出發前 2 週再查可獲得準確預報！';
   }
-  const wk=document.getElementById('w-week');
-  wk.innerHTML='';
-  showDays.forEach(({date,i})=>{
+  const wk=document.getElementById('w-week'); wk.innerHTML='';
+  showDays.forEach(({date,i}) => {
     const isTripDay=date>=TRIP_START&&date<=TRIP_END;
     const isToday=date.toDateString()===today.toDateString();
     const md=(date.getMonth()+1)+'/'+(date.getDate());
@@ -846,21 +906,21 @@ function renderWeather(d){
 
 // ── MODE SWITCH ───────────────────────────────────
 let clickCount=0, clickTimer=null, isGuideMode=false;
-function handleIconClick(){
+function handleIconClick() {
   const icon=document.getElementById('headerIcon');
   icon.classList.remove('clicked'); void icon.offsetWidth; icon.classList.add('clicked');
   clickCount++; clearTimeout(clickTimer);
-  clickTimer=setTimeout(()=>{ clickCount=0; },2000);
-  if(clickCount>=5){ clickCount=0; clearTimeout(clickTimer); showModal(); }
+  clickTimer=setTimeout(()=>{clickCount=0;},2000);
+  if(clickCount>=5){clickCount=0;clearTimeout(clickTimer);showModal();}
 }
-function showModal(){
+function showModal() {
   document.getElementById('modalIcon').textContent=isGuideMode?'👨‍👩‍👧':'🗺️';
   document.getElementById('modalTitle').textContent=isGuideMode?'切換回家庭旅遊版？':'切換到導遊版本？';
   document.getElementById('modalDesc').textContent=isGuideMode?'將隱藏導遊備註，切換回家人閱覽模式。':'導遊版本包含每日待辦清單與詳細備註，僅供帶路人使用。';
   document.getElementById('modalConfirm').classList.toggle('to-family',isGuideMode);
   document.getElementById('switchModal').classList.add('show');
 }
-function closeModal(){ document.getElementById('switchModal').classList.remove('show'); }
+function closeModal(){document.getElementById('switchModal').classList.remove('show');}
 function confirmSwitch(){
   closeModal(); isGuideMode=!isGuideMode;
   document.body.classList.toggle('guide-mode',isGuideMode);
@@ -893,19 +953,19 @@ function switchTodoDay(day,btn){
 }
 
 function toggleMore(btn){
-  const card=btn.closest('.spot-card,.food-card');
+  const card=btn.closest('.spot-card,.food-card,.mv-slide');
   const panel=card.querySelector('.more-panel');
   const open=panel.classList.toggle('open');
   btn.textContent=open?'📖 收起 ▴':'📖 了解更多 ▾';
 }
 function toggleGuide(btn){
-  const card=btn.closest('.spot-card,.food-card');
+  const card=btn.closest('.spot-card,.food-card,.mv-slide');
   const panel=card.querySelector('.guide-panel');
   const open=panel.classList.toggle('open');
   btn.classList.toggle('active',open);
   btn.textContent=open?'✕':'📋';
 }
-function toggleTodo(item, preventToggle=false){
+function toggleTodo(item,preventToggle=false){
   if(!preventToggle) item.classList.toggle('done');
   const sec=item.closest('.todo-section');
   const all=sec.querySelectorAll('.todo-item').length;
@@ -927,7 +987,7 @@ function syncFoodNav(el,navId){
   nav.querySelectorAll('.food-nav-btn')[1].disabled=idx>=cards.length-1;
 }
 
-window.onload = function() { loadTripData(); }
+window.onload = function(){ loadTripData(); };
 </script>
 </body>
 </html>
