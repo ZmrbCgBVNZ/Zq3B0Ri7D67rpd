@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>岡山五天四夜</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Zen Maru Gothic',sans-serif;background:#F5F6FA;color:#2d3a4a;min-height:100vh;padding-bottom:80px;font-size:16px}
+:root{--fuji:#3B6FA0;--light-blue:#E8F0F8;--guide:#2D6A4F}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle at 20% 20%,rgba(59,111,160,.06) 0,transparent 50%),radial-gradient(circle at 80% 80%,rgba(176,160,168,.08) 0,transparent 50%);pointer-events:none;z-index:0}
+body.guide-mode::before{background-image:radial-gradient(circle at 20% 20%,rgba(45,106,79,.08) 0,transparent 50%),radial-gradient(circle at 80% 80%,rgba(45,106,79,.06) 0,transparent 50%)}
+body.guide-mode{background:#F0F5F2}
+
+/* HEADER */
+.header{background:linear-gradient(135deg,#3B6FA0,#5B8FC0);color:#fff;padding:20px 16px 16px;text-align:center;position:relative;z-index:1;border-radius:0 0 24px 24px;box-shadow:0 4px 20px rgba(59,111,160,.3);transition:.4s}
+body.guide-mode .header{background:linear-gradient(135deg,#2D6A4F,#52B788);box-shadow:0 4px 20px rgba(45,106,79,.3)}
+.header-icon{font-size:32px;margin-bottom:4px;cursor:pointer;display:inline-block;user-select:none}
+.header h1{font-size:22px;font-weight:700}
+.header .subtitle{font-size:14px;opacity:.85;margin-top:4px}
+.header .dates{display:inline-block;background:rgba(255,255,255,.2);border-radius:20px;padding:4px 14px;font-size:14px;margin-top:8px}
+.mode-badge{display:inline-block;background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.4);border-radius:20px;padding:3px 12px;font-size:12px;margin-top:6px;font-weight:700}
+
+/* SYSTEM LOADERS / ERRORS */
+#loading-overlay{position:fixed;inset:0;background:rgba(245,246,250,0.95);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;transition: opacity 0.3s ease}
+.loader-spinner{width:48px;height:48px;border:5px solid #dce8f4;border-top-color:var(--fuji);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.error-card{background:#fff;border-radius:20px;padding:24px;max-width:400px;width:90%;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.1)}
+.retry-btn{background:var(--fuji);color:#fff;border:none;border-radius:12px;padding:10px 20px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;margin-top:16px;transition:0.2s}
+.retry-btn:hover{opacity:0.9}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:20px;padding:24px;margin:20px;max-width:320px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-icon{font-size:40px;margin-bottom:12px}
+.modal-title{font-size:18px;font-weight:700;color:#2d3a4a;margin-bottom:8px}
+.modal-desc{font-size:14px;color:#777;line-height:1.6;margin-bottom:20px}
+.modal-btns{display:flex;gap:10px}
+.modal-btn{flex:1;padding:12px;border-radius:12px;border:none;font-family:'Zen Maru Gothic',sans-serif;font-size:15px;font-weight:700;cursor:pointer}
+.modal-btn.confirm{background:#2D6A4F;color:#fff}
+.modal-btn.confirm.to-family{background:var(--fuji)}
+.modal-btn.cancel{background:#f0f2f4;color:#666}
+
+/* TABS */
+.tab-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e8eaed;display:flex;z-index:100;box-shadow:0 -4px 20px rgba(0,0,0,.08);border-radius:20px 20px 0 0}
+body.guide-mode .tab-bar{border-top:2px solid #52B788}
+.tab-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 0 12px;cursor:pointer;color:#999;font-size:13px;gap:3px}
+.tab-item.active{color:var(--fuji)}
+body.guide-mode .tab-item.active{color:var(--guide)}
+.tab-item .tab-icon{font-size:24px}
+.content{position:relative;z-index:1;padding:16px}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* DAY SELECTOR */
+.day-selector{display:flex;gap:8px;overflow-x:auto;padding:4px 0 12px;scrollbar-width:none}
+.day-selector::-webkit-scrollbar{display:none}
+.day-btn{flex-shrink:0;background:#fff;border:2px solid #e0e4ea;border-radius:20px;padding:8px 16px;font-family:'Zen Maru Gothic',sans-serif;font-size:14px;cursor:pointer;transition:.2s;color:#666;white-space:nowrap;line-height:1.4}
+.day-btn.active{background:var(--fuji);border-color:var(--fuji);color:#fff;font-weight:700}
+body.guide-mode .day-btn.active{background:var(--guide);border-color:var(--guide)}
+.day-panel{display:none}
+.day-panel.active{display:block}
+
+/* DAY HEADER */
+.day-header{background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:12px;border:1.5px solid var(--light-blue);display:flex;align-items:center;gap:12px}
+.day-badge{background:var(--fuji);color:#fff;border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;line-height:1.2;text-align:center;transition:.3s}
+body.guide-mode .day-badge{background:var(--guide)}
+.day-info h2{font-size:17px;color:var(--fuji);font-weight:700}
+body.guide-mode .day-info h2{color:var(--guide)}
+.day-info p{font-size:14px;color:#888;margin-top:2px}
+
+/* TIMELINE */
+.timeline-item{display:flex;gap:10px;margin-bottom:12px}
+.time-col{flex-shrink:0;width:62px;display:flex;flex-direction:column;align-items:center;padding-top:14px}
+.time-badge{background:var(--light-blue);color:var(--fuji);border-radius:8px;padding:4px 5px;font-size:14px;font-weight:700;text-align:center;line-height:1.4;white-space:nowrap}
+body.guide-mode .time-badge{background:#E8F5EE;color:var(--guide)}
+.time-line{flex:1;width:2px;background:#dce8f4;margin-top:6px;border-radius:2px}
+.timeline-item:last-child .time-line{display:none}
+
+/* SPOT CARD */
+.spot-card{background:#fff;border-radius:16px;padding:14px 14px 14px 18px;flex:1;border:1.5px solid #eef0f4;position:relative;overflow:hidden;min-width:0;display:flex;flex-direction:column;justify-content:center}
+.spot-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px}
+.spot-card.type-food::before{background:#F4A261}
+.spot-card.type-sight::before{background:#3B6FA0}
+.spot-card.type-shop::before{background:#E07C8A}
+.spot-card.type-activity::before{background:#5B8A5A}
+.spot-card.type-hotel::before{background:#7B6CA8}
+.spot-card.type-transport::before{background:#B8B0A8}
+
+/* ★ 修正：card-img 只在有圖時才渲染，不再用 src="" 佔位 */
+.card-img{width:100%;height:160px;object-fit:cover;border-radius:10px;margin-bottom:10px;display:block}
+
+.spot-header{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.cat-badge{font-size:11px;font-weight:700;border-radius:10px;padding:4px 10px;flex-shrink:0;margin-top:2px}
+.cat-food{background:#FFF0E6;color:#C06020}
+.cat-sight{background:#E8F0F8;color:#1a5080}
+.cat-shop{background:#FCEEF0;color:#B04060}
+.cat-activity{background:#EAF3EA;color:#2A6030}
+.cat-hotel{background:#F0EEF8;color:#5040A0}
+.cat-transport{background:#F0EEF0;color:#606060}
+.spot-name{font-size:16px;font-weight:700;color:#2d3a4a;line-height:1.3;flex:1}
+.spot-desc{font-size:14px;color:#666;margin-top:4px;line-height:1.6}
+/* ★ 修正：確保空 desc 完全不佔空間 */
+.spot-desc:empty{display:none;margin:0;padding:0}
+
+/* HEADER ROW: name + buttons */
+.spot-header-btns{display:flex;align-items:center;gap:6px;flex-shrink:0;margin-top:2px}
+.icon-btn{width:30px;height:30px;border-radius:8px;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;transition:.2s}
+.icon-btn.always-show{display:flex;background:#F0F4FA;color:#3B6FA0}
+.icon-btn.always-show:hover{background:#DDE8F5}
+body.guide-mode .icon-btn.guide-only{display:flex;background:#E8F5EE}
+.icon-btn.guide-only.active{background:#2D6A4F}
+
+/* 了解更多 panel */
+.more-panel{display:none;margin:10px 0 0 8px;border-radius:12px;overflow:hidden;border:1.5px solid #D0E4F8}
+.more-panel.open{display:block}
+.more-inner{background:#F5F9FF;padding:12px}
+.more-text{font-size:14px;color:#2d3a4a;line-height:1.8;margin-bottom:10px;white-space:pre-line}
+
+/* 導遊備註 panel */
+.guide-panel{display:none;margin:8px 0 0 8px;border-radius:12px;overflow:hidden;border:1.5px solid #B7E4C7}
+.guide-panel.open{display:block}
+.guide-inner{background:#F0FAF4;padding:12px}
+.guide-note-text{font-size:13px;color:#2D6A4F;line-height:1.7;margin-bottom:10px;white-space:pre-line}
+
+/* SHARED ALBUM */
+.album-label{font-size:12px;font-weight:700;color:#5580A0;margin-bottom:6px;display:flex;align-items:center;gap:4px}
+.album-label.green{color:#2D6A4F}
+.album-scroll{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px 0 6px;scroll-snap-type:x mandatory}
+.album-scroll::-webkit-scrollbar{display:none}
+.album-slide{flex-shrink:0;width:180px;height:120px;border-radius:10px;overflow:hidden;scroll-snap-align:start;background:#D0DCE8}
+.album-slide img{width:100%;height:100%;object-fit:cover}
+.album-dots{display:flex;gap:4px;justify-content:center;margin-top:4px}
+.album-dot{width:5px;height:5px;border-radius:50%;background:#C0D4E8;transition:.2s}
+.album-dot.active{background:var(--fuji);width:14px;border-radius:3px}
+.album-dot.green{background:#B7E4C7}
+.album-dot.green.active{background:#2D6A4F}
+
+/* TAGS */
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 8px 8px}
+.tag{font-size:12px;font-weight:700;border-radius:10px;padding:4px 10px}
+.tag-eat{background:#FEF3E2;color:#D07020}
+.tag-buy{background:#FCE8EC;color:#C03050}
+.tag-photo{background:#E3EEF8;color:#1060A0}
+.tag-tip{background:#E8F4E8;color:#207030}
+
+.tips-box{margin:8px 0 4px 8px;display:flex;flex-direction:column;gap:6px}
+.tip-row{background:#F0F6FF;border-radius:10px;padding:9px 12px;font-size:14px;color:#3B6FA0;display:flex;gap:6px;align-items:flex-start}
+.tip-icon{font-size:15px;flex-shrink:0;margin-top:1px}
+
+.map-btn{display:flex;align-items:center;gap:5px;background:var(--fuji);color:#fff;border:none;border-radius:12px;padding:9px 14px;font-family:'Zen Maru Gothic',sans-serif;font-size:14px;cursor:pointer;text-decoration:none;justify-content:center;margin:10px 0 0 8px;width:calc(100% - 8px)}
+body.guide-mode .map-btn{background:var(--guide)}
+
+/* 了解更多 link */
+.more-link{display:inline-flex;align-items:center;gap:4px;margin:8px 0 0 8px;font-size:14px;color:var(--fuji);cursor:pointer;font-weight:700;background:none;border:none;font-family:'Zen Maru Gothic',sans-serif;padding:0;text-decoration:underline;text-underline-offset:3px}
+body.guide-mode .more-link{color:var(--guide)}
+
+/* FOOD CAROUSEL */
+.food-carousel-wrap{flex:1;min-width:0}
+.food-carousel{display:flex;overflow-x:auto;gap:12px;scroll-snap-type:x mandatory;scrollbar-width:none;padding:2px 2px 6px}
+.food-carousel::-webkit-scrollbar{display:none}
+.food-card{flex-shrink:0;width:calc(100% - 4px);scroll-snap-align:start;background:#fff;border-radius:16px;border:1.5px solid #eef0f4;overflow:hidden;position:relative}
+.food-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px 0 0 4px;background:#F4A261}
+/* ★ 修正：food-card-img 只在有圖時才渲染 */
+.food-card-img{width:100%;height:150px;object-fit:cover;display:block}
+.food-card-body{padding:12px 14px}
+.food-card-header{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px}
+.food-card-name{font-size:16px;font-weight:700;color:#2d3a4a;flex:1;line-height:1.3}
+.food-card-desc{font-size:14px;color:#666;line-height:1.6;margin-bottom:6px}
+/* ★ 修正：food-card-desc 為空時完全隱藏 */
+.food-card-desc:empty{display:none;margin:0;padding:0}
+.food-nav{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:6px}
+.food-nav-btn{background:var(--fuji);color:#fff;border:none;border-radius:50%;width:30px;height:30px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+body.guide-mode .food-nav-btn{background:var(--guide)}
+.food-nav-btn:disabled{background:#ddd;cursor:default}
+.food-nav-dots{display:flex;gap:5px}
+.food-nav-dot{width:6px;height:6px;border-radius:50%;background:#dce8f4}
+.food-nav-dot.active{background:var(--fuji);width:16px;border-radius:3px}
+body.guide-mode .food-nav-dot.active{background:var(--guide)}
+
+/* GUIDE TODO */
+.todo-day-selector{display:flex;gap:8px;overflow-x:auto;padding:4px 0 12px;scrollbar-width:none}
+.todo-day-selector::-webkit-scrollbar{display:none}
+.todo-day-btn{flex-shrink:0;background:#fff;border:2px solid #e0e4ea;border-radius:20px;padding:8px 16px;font-family:'Zen Maru Gothic',sans-serif;font-size:14px;cursor:pointer;color:#666;white-space:nowrap;line-height:1.4}
+.todo-day-btn.active{background:var(--guide);border-color:var(--guide);color:#fff;font-weight:700}
+.todo-panel{display:none}
+.todo-panel.active{display:block}
+.todo-section{background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:12px;border:1.5px solid #B7E4C7}
+.todo-title{font-size:15px;font-weight:700;color:var(--guide);margin-bottom:10px}
+.todo-progress{background:#E8F5EE;border-radius:8px;padding:8px 12px;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.todo-progress-bar{flex:1;height:6px;background:#C7EAD4;border-radius:3px;overflow:hidden}
+.todo-progress-fill{height:100%;background:var(--guide);border-radius:3px;transition:.4s}
+.todo-progress-text{font-size:12px;color:var(--guide);font-weight:700;white-space:nowrap}
+.todo-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid #f0f4f0;cursor:pointer}
+.todo-item:last-child{border-bottom:none}
+.todo-check{width:22px;height:22px;border-radius:6px;border:2px solid #B7E4C7;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.todo-item.done .todo-check{background:var(--guide);border-color:var(--guide)}
+.todo-item.done .todo-check::after{content:'✓';color:#fff;font-size:13px;font-weight:700}
+.todo-text{font-size:14px;color:#2d3a4a;line-height:1.5}
+.todo-item.done .todo-text{color:#aaa;text-decoration:line-through}
+
+/* GUIDE SECTION */
+.guide-section{background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:12px;border:1.5px solid #eef0f4}
+.guide-title{font-size:16px;font-weight:700;color:var(--fuji);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.guide-item{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid #f0f2f4;font-size:14px;color:#555;align-items:flex-start}
+.guide-item:last-child{border-bottom:none}
+.guide-item-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.guide-item strong{color:#2d3a4a;display:block;font-size:14px}
+
+/* WEATHER */
+.weather-card{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;border:1.5px solid #eef0f4;text-align:center}
+.weather-temp{font-size:42px;font-weight:700;color:var(--fuji)}
+.weather-sub{font-size:14px;color:#888;margin-top:4px}
+.weather-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.weather-item{background:#F5F8FC;border-radius:10px;padding:10px;text-align:center}
+.weather-item .w-icon{font-size:22px;margin-bottom:4px}
+.weather-item .w-label{font-size:12px;color:#888}
+.weather-item .w-val{font-size:15px;font-weight:700;color:#2d3a4a}
+.week-row{display:flex;gap:6px;overflow-x:auto;padding:4px 0;scrollbar-width:none}
+.week-row::-webkit-scrollbar{display:none}
+.week-item{flex-shrink:0;background:#F5F8FC;border-radius:12px;padding:10px 12px;text-align:center;min-width:64px}
+.week-item.highlight{background:var(--fuji);color:#fff}
+.week-item .wd{font-size:12px;opacity:.7}
+.week-item .wi{font-size:20px;margin:4px 0}
+.week-item .wt{font-size:13px;font-weight:700}
+.weather-loading{text-align:center;padding:20px;color:#aaa;font-size:14px}
+.weather-error{background:#FFF0E6;border-radius:12px;padding:12px;font-size:13px;color:#C06020;text-align:center;margin-bottom:12px}
+
+@keyframes ripple{0%{transform:scale(1)}50%{transform:scale(1.4)}100%{transform:scale(1)}}
+.header-icon.clicked{animation:ripple .15s ease}
+</style>
+</head>
+<body>
+
+<!-- 全螢幕讀取 / 錯誤提示頁面 -->
+<div id="loading-overlay">
+  <div class="loader-spinner" id="loader-spinner"></div>
+  <div style="font-size:16px;color:#555;font-weight:500;" id="loading-text">🌍 正在從 Google Sheets 載入自由行資料…</div>
+  <div class="error-card" id="error-card" style="display:none;">
+    <div style="font-size:40px;margin-bottom:12px">📡</div>
+    <div style="font-size:18px;font-weight:700;color:#d9534f;margin-bottom:8px">資料庫讀取失敗</div>
+    <div style="font-size:14px;color:#555;line-height:1.6;text-align:left;background:#fcf8e3;border:1px solid #faebcc;padding:12px;border-radius:10px;margin:12px 0;" id="error-message">無法連結至雲端資料庫，請檢查您的網路或 Apps Script 部署網址是否正確。</div>
+    <div style="font-size:12px;color:#777;margin-bottom:16px;text-align:left;">
+      💡 <b>提示：</b>如果是首次設定，請確認 Google Apps Script 部署時的<b>「誰有存取權」</b>有設為<b>「所有人 (Anyone)」</b>。
+    </div>
+    <button class="retry-btn" onclick="retryConnection()">🔄 重新連線</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="switchModal">
+  <div class="modal">
+    <div class="modal-icon" id="modalIcon">🗺️</div>
+    <div class="modal-title" id="modalTitle">切換到導遊版本？</div>
+    <div class="modal-desc" id="modalDesc">導遊版本包含待辦清單與詳細行程備註，僅供帶路人使用。</div>
+    <div class="modal-btns">
+      <button class="modal-btn cancel" onclick="closeModal()">取消</button>
+      <button class="modal-btn confirm" id="modalConfirm" onclick="confirmSwitch()">確認切換</button>
+    </div>
+  </div>
+</div>
+
+<div class="header">
+  <div class="header-icon" id="headerIcon" onclick="handleIconClick()">⛩️</div>
+  <h1>岡山五天四夜自由行</h1>
+  <div class="subtitle" id="headerSubtitle">Okayama Trip</div>
+  <div class="dates">📅 2026年 9月 27日 ～ 10月 1日</div>
+  <div><span class="mode-badge" id="modeBadge">👨‍👩‍👧 家庭旅遊版</span></div>
+</div>
+
+<div class="content">
+
+  <!-- ===== 行程頁籤 ===== -->
+  <div class="tab-content active" id="tab-itinerary">
+    <div class="day-selector" id="day-selector-container"></div>
+    <div id="day-panels-container"></div>
+  </div>
+
+  <!-- ===== 指南 / 待辦 頁籤 ===== -->
+  <div class="tab-content" id="tab-guide">
+    <div id="family-guide"></div>
+    <div id="guide-todo" style="display:none">
+      <div class="todo-day-selector" id="todo-day-selector-container"></div>
+      <div id="todo-panels-container"></div>
+    </div>
+  </div>
+
+  <!-- ===== 天氣預報 頁籤 ===== -->
+  <div class="tab-content" id="tab-weather">
+    <div id="weather-loading" class="weather-loading">⏳ 正在讀取岡山天氣資料…</div>
+    <div id="weather-error" class="weather-error" style="display:none"></div>
+    <div id="weather-main" style="display:none">
+      <div class="weather-card">
+        <div style="font-size:44px;margin-bottom:6px" id="w-icon">⛅</div>
+        <div class="weather-temp" id="w-temp">--°C</div>
+        <div style="font-size:16px;font-weight:600;margin-top:4px;color:#2d3a4a">岡山市</div>
+        <div class="weather-sub" id="w-desc">讀取中…</div>
+        <div class="weather-row">
+          <div class="weather-item"><div class="w-icon">💧</div><div class="w-label">濕度</div><div class="w-val" id="w-hum">--%</div></div>
+          <div class="weather-item"><div class="w-icon">💨</div><div class="w-label">風速</div><div class="w-val" id="w-wind">-- km/h</div></div>
+          <div class="weather-item"><div class="w-icon">🌡</div><div class="w-label">體感</div><div class="w-val" id="w-feel">--°C</div></div>
+          <div class="weather-item"><div class="w-icon">🌂</div><div class="w-label">降雨機率</div><div class="w-val" id="w-rain">--%</div></div>
+        </div>
+      </div>
+      <div style="background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:12px;border:1.5px solid #eef0f4">
+        <div class="guide-title" style="margin-bottom:10px" id="w-forecast-title">📅 旅遊期間預報</div>
+        <div class="week-row" id="w-week"></div>
+      </div>
+      <div id="w-note" style="background:#F0F6FF;border-radius:12px;padding:12px 14px;font-size:13px;color:#3B6FA0;margin-bottom:12px;display:none"></div>
+    </div>
+    <div class="guide-section">
+      <div class="guide-title">🧥 行前打包清單</div>
+      <div class="guide-item"><span class="guide-item-icon">☂️</span><div><strong>折疊傘</strong>秋季岡山偶有短暫降雨</div></div>
+      <div class="guide-item"><span class="guide-item-icon">🧴</span><div><strong>防曬</strong>初秋日照仍強，SPF50 必備</div></div>
+      <div class="guide-item"><span class="guide-item-icon">👕</span><div><strong>薄外套</strong>早晚溫差約 8～10°C</div></div>
+      <div class="guide-item"><span class="guide-item-icon">👟</span><div><strong>舒適步行鞋</strong>直島多步行，鞋底要軟</div></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="tab-bar">
+  <div class="tab-item active" id="nav-itinerary" onclick="switchTab('itinerary')"><span class="tab-icon">🗓</span><span>行程</span></div>
+  <div class="tab-item" id="nav-guide" onclick="switchTab('guide')"><span class="tab-icon" id="guideTabIcon">📖</span><span id="guideTabLabel">指南</span></div>
+  <div class="tab-item" id="nav-weather" onclick="switchTab('weather')"><span class="tab-icon">🌤</span><span>天氣</span></div>
+</div>
+
+<script>
+const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz0nIFdtMcWDsBB3hP-wN2QyS88P6OWlXl6AfbbxrKfJGchQvwc9KFt0KqLWadkeuBZ/exec";
+
+let cachedTripData = null;
+const CACHE_KEY = 'tripData_okayama';
+const CACHE_TTL = 60 * 60 * 1000;
+
+async function loadTripData() {
+  try {
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      const { data, timestamp } = JSON.parse(cached);
+      if (Date.now() - timestamp < CACHE_TTL) {
+        renderAll(data);
+        document.getElementById('loading-overlay').style.display = 'none';
+        fetchAndCache(true);
+        return;
+      }
+    }
+  } catch(e) {}
+  fetchAndCache(false);
+}
+
+async function fetchAndCache(silent) {
+  try {
+    const res = await fetch(GAS_API_URL);
+    if (!res.ok) throw new Error(`HTTP 錯誤! 狀態碼: ${res.status}`);
+    const data = await res.json();
+    if (data.error) throw new Error(`雲端指令碼錯誤: ${data.error}`);
+
+    if (data.tour && Array.isArray(data.tour)) {
+      data.tour.forEach(item => {
+        ['start_time','end_time','spot_title','category','image_url','description','tip','tag','more_text','more_img','map_url','guide_text','guide_img'].forEach(f => {
+          item[f] = (item[f] !== undefined && item[f] !== null) ? String(item[f]) : '';
+        });
+      });
+    }
+    if (data.info && Array.isArray(data.info)) {
+      data.info.forEach(item => {
+        ['Day','Daytitle','Daytext'].forEach(f => {
+          item[f] = (item[f] !== undefined && item[f] !== null) ? String(item[f]) : '';
+        });
+      });
+    }
+    if (data.gbook && Array.isArray(data.gbook)) {
+      data.gbook.forEach(item => {
+        ['gbook_title','gbook_subtitle','gbook_subemoji','gbook_text'].forEach(f => {
+          item[f] = (item[f] !== undefined && item[f] !== null) ? String(item[f]) : '';
+        });
+      });
+    }
+    if (data.todo && Array.isArray(data.todo)) {
+      data.todo.forEach(item => {
+        ['todo_day','todo_list'].forEach(f => {
+          item[f] = (item[f] !== undefined && item[f] !== null) ? String(item[f]) : '';
+        });
+      });
+    }
+
+    cachedTripData = data;
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ data, timestamp: Date.now() })); } catch(e) {}
+
+    if (!silent) {
+      renderAll(data);
+      document.getElementById('loading-overlay').style.opacity = '0';
+      setTimeout(() => { document.getElementById('loading-overlay').style.display = 'none'; }, 300);
+      loadWeather();
+    }
+  } catch (error) {
+    if (silent) return;
+    console.error("資料載入失敗:", error);
+    document.getElementById('loader-spinner').style.display = 'none';
+    document.getElementById('loading-text').style.display = 'none';
+    document.getElementById('error-card').style.display = 'block';
+    document.getElementById('error-message').textContent = `${error.message}`;
+  }
+}
+
+function renderAll(data) {
+  cachedTripData = data;
+  renderDaySelector(data.info);
+  renderItinerary(data.info, data.tour);
+  renderGuideBook(data.gbook);
+  renderTodoList(data.info, data.todo);
+  loadWeather();
+}
+
+function retryConnection() {
+  document.getElementById('error-card').style.display = 'none';
+  document.getElementById('loader-spinner').style.display = 'block';
+  document.getElementById('loading-text').style.display = 'block';
+  loadTripData();
+}
+
+function renderDaySelector(info) {
+  const container = document.getElementById('day-selector-container');
+  container.innerHTML = '';
+  info.forEach((item, idx) => {
+    const dateMatch = item.Daytext ? item.Daytext.match(/(\d+\/\d+)/) : null;
+    const dateStr = dateMatch ? dateMatch[0] : '';
+    const btn = document.createElement('button');
+    btn.className = `day-btn ${idx === 0 ? 'active' : ''}`;
+    btn.onclick = (e) => switchDay(item.Day, e.currentTarget);
+    btn.innerHTML = `Day ${item.Day}<br><span style="font-size:11px">${dateStr}</span>`;
+    container.appendChild(btn);
+  });
+}
+
+function renderItinerary(info, tour) {
+  const container = document.getElementById('day-panels-container');
+  container.innerHTML = '';
+
+  info.forEach((dayInfo, idx) => {
+    const panel = document.createElement('div');
+    panel.className = `day-panel ${idx === 0 ? 'active' : ''}`;
+    panel.id = `day-${dayInfo.Day}`;
+    panel.innerHTML = `
+      <div class="day-header">
+        <div class="day-badge">Day<br>${dayInfo.Day}</div>
+        <div class="day-info">
+          <h2>${dayInfo.Daytitle || ''}</h2>
+          <p>${dayInfo.Daytext || ''}</p>
+        </div>
+      </div>
+      <div class="timeline-container" id="timeline-day-${dayInfo.Day}"></div>
+    `;
+    container.appendChild(panel);
+  });
+
+  const groupedTour = {};
+  tour.forEach(item => {
+    const key = `day_${item.tour_day}_time_${item.start_time || ''}_${item.end_time || ''}`;
+    if (!groupedTour[key]) groupedTour[key] = [];
+    groupedTour[key].push(item);
+  });
+
+  Object.keys(groupedTour).sort((a, b) => {
+    const t = k => k.split('_time_')[1]?.split('_')[0] || '';
+    return t(a).localeCompare(t(b));
+  }).forEach(key => {
+    const group = groupedTour[key];
+    if (!group.length) return;
+    const day = group[0].tour_day;
+    const tlc = document.getElementById(`timeline-day-${day}`);
+    if (!tlc) return;
+
+    const ti = document.createElement('div');
+    ti.className = 'timeline-item';
+    const tc = document.createElement('div');
+    tc.className = 'time-col';
+    tc.innerHTML = `<div class="time-badge">${group[0].start_time || ''}<br>↓<br>${group[0].end_time || ''}</div><div class="time-line"></div>`;
+    ti.appendChild(tc);
+    ti.appendChild(group.length === 1 ? createSpotCard(group[0]) : createCarouselCard(group, `food-d${day}-${(group[0].start_time||'').replace(':','')}`));
+    tlc.appendChild(ti);
+  });
+}
+
+// ── 共用 description HTML 產生器 ──────────────────
+// ★ 修正：trim() 後為空字串時完全不輸出任何 HTML，杜絕空白殘留
+function descHtml(desc, extraClass = '') {
+  if (!desc || !desc.trim()) return '';
+  return `<div class="spot-desc${extraClass ? ' ' + extraClass : ''}">${desc}</div>`;
+}
+
+// ★ 修正：只在 url 非空時才輸出 img tag，避免空 src 產生佔位空白
+function cardImgHtml(url, title, cssClass, height) {
+  const urls = url ? url.split('|').map(s => s.trim()).filter(s => s) : [];
+  if (urls.length === 0) return '';
+  if (urls.length === 1) {
+    return `<img class="${cssClass}" src="${urls[0]}" alt="${title}" style="height:${height}px" onerror="this.style.display='none'">`;
+  }
+  return createMiniAlbum(urls, false);
+}
+
+function createSpotCard(item) {
+  const card = document.createElement('div');
+  card.className = `spot-card ${getCardTypeClass(item.category)}`;
+
+  // ★ 使用修正後的 cardImgHtml，無圖時完全不輸出
+  const imgHtml = cardImgHtml(item.image_url, item.spot_title, 'card-img', 160);
+
+  const catClass = getCategoryBadgeClass(item.category);
+  const catBadgeHtml = (item.category && item.category.trim())
+    ? `<span class="cat-badge ${catClass}">${item.category}</span>` : '';
+
+  let tipsHtml = '';
+  if (item.tip && item.tip.trim()) {
+    tipsHtml = `<div class="tips-box">${item.tip.split('|').map(t => `<div class="tip-row"><span class="tip-icon">💡</span>${t.trim()}</div>`).join('')}</div>`;
+  }
+
+  let tagsHtml = '';
+  if (item.tag && item.tag.trim()) {
+    tagsHtml = `<div class="tags">${item.tag.split('|').map(t => `<span class="tag ${getTagStyleClass(t)}">${t.trim()}</span>`).join('')}</div>`;
+  }
+
+  let moreImgHtml = (item.more_img && item.more_img.trim()) ? createMiniAlbum(item.more_img.split('|'), false) : '';
+  const hasMore = (item.more_text && item.more_text.trim()) || moreImgHtml;
+  const moreLinkHtml = hasMore ? `
+    <button class="more-link" onclick="toggleMore(this)">📖 了解更多 ▾</button>
+    <div class="more-panel"><div class="more-inner">
+      ${item.more_text ? `<div class="more-text">${item.more_text}</div>` : ''}
+      ${moreImgHtml}
+    </div></div>` : '';
+
+  let guideImgHtml = (item.guide_img && item.guide_img.trim()) ? createMiniAlbum(item.guide_img.split('|'), true) : '';
+  const hasGuide = (item.guide_text && item.guide_text.trim()) || guideImgHtml;
+  const guideBtnHtml = hasGuide ? `<button class="icon-btn guide-only" onclick="toggleGuide(this)" title="導遊備註">📋</button>` : '';
+  const guidePanelHtml = hasGuide ? `
+    <div class="guide-panel"><div class="guide-inner">
+      ${item.guide_text ? `<div class="guide-note-text">${item.guide_text}</div>` : ''}
+      ${guideImgHtml}
+    </div></div>` : '';
+
+  const mapBtnHtml = (item.map_url && item.map_url.trim())
+    ? `<a class="map-btn" href="${item.map_url}" target="_blank">🗺 Google Maps 導航</a>` : '';
+
+  card.innerHTML = `
+    ${imgHtml}
+    <div class="spot-header">
+      ${catBadgeHtml}
+      <span class="spot-name">${item.spot_title || ''}</span>
+      <div class="spot-header-btns">${guideBtnHtml}</div>
+    </div>
+    ${descHtml(item.description)}
+    ${tagsHtml}
+    ${tipsHtml}
+    ${moreLinkHtml}
+    ${guidePanelHtml}
+    ${mapBtnHtml}
+  `;
+  return card;
+}
+
+function createCarouselCard(items, carouselId) {
+  const wrap = document.createElement('div');
+  wrap.className = 'food-carousel-wrap';
+  const carousel = document.createElement('div');
+  carousel.className = 'food-carousel';
+  carousel.id = carouselId;
+  carousel.setAttribute('onscroll', `syncFoodNav(this,'fn-${carouselId}')`);
+
+  items.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'food-card';
+
+    // ★ 使用修正後的 cardImgHtml，無圖時完全不輸出
+    const imgHtml = cardImgHtml(item.image_url, item.spot_title, 'food-card-img', 150);
+
+    const catClass = getCategoryBadgeClass(item.category);
+    const catBadgeHtml = (item.category && item.category.trim())
+      ? `<span class="cat-badge ${catClass}">${item.category}</span>` : '';
+
+    let tipsHtml = '';
+    if (item.tip && item.tip.trim()) {
+      tipsHtml = `<div class="tips-box">${item.tip.split('|').map(t => `<div class="tip-row"><span class="tip-icon">💡</span>${t.trim()}</div>`).join('')}</div>`;
+    }
+
+    let tagsHtml = '';
+    if (item.tag && item.tag.trim()) {
+      tagsHtml = `<div class="tags">${item.tag.split('|').map(t => `<span class="tag ${getTagStyleClass(t)}">${t.trim()}</span>`).join('')}</div>`;
+    }
+
+    let moreImgHtml = (item.more_img && item.more_img.trim()) ? createMiniAlbum(item.more_img.split('|'), false) : '';
+    const hasMore = (item.more_text && item.more_text.trim()) || moreImgHtml;
+    const moreLinkHtml = hasMore ? `
+      <button class="more-link" onclick="toggleMore(this)">📖 了解更多 ▾</button>
+      <div class="more-panel"><div class="more-inner">
+        ${item.more_text ? `<div class="more-text">${item.more_text}</div>` : ''}
+        ${moreImgHtml}
+      </div></div>` : '';
+
+    let guideImgHtml = (item.guide_img && item.guide_img.trim()) ? createMiniAlbum(item.guide_img.split('|'), true) : '';
+    const hasGuide = (item.guide_text && item.guide_text.trim()) || guideImgHtml;
+    const guideBtnHtml = hasGuide ? `<button class="icon-btn guide-only" onclick="toggleGuide(this)">📋</button>` : '';
+    const guidePanelHtml = hasGuide ? `
+      <div class="guide-panel"><div class="guide-inner">
+        ${item.guide_text ? `<div class="guide-note-text">${item.guide_text}</div>` : ''}
+        ${guideImgHtml}
+      </div></div>` : '';
+
+    const mapBtnHtml = (item.map_url && item.map_url.trim())
+      ? `<a class="map-btn" href="${item.map_url}" target="_blank">🗺 導航</a>` : '';
+
+    card.innerHTML = `
+      ${imgHtml}
+      <div class="food-card-body">
+        <div class="food-card-header">
+          ${catBadgeHtml}
+          <span class="food-card-name">${item.spot_title || ''}</span>
+          <div class="spot-header-btns">${guideBtnHtml}</div>
+        </div>
+        ${descHtml(item.description, 'food-card-desc')}
+        ${tagsHtml}
+        ${tipsHtml}
+        ${moreLinkHtml}
+        ${guidePanelHtml}
+        ${mapBtnHtml}
+      </div>
+    `;
+    carousel.appendChild(card);
+  });
+
+  const dotsHtml = items.map((_, i) => `<div class="food-nav-dot ${i === 0 ? 'active' : ''}"></div>`).join('');
+  const nav = document.createElement('div');
+  nav.className = 'food-nav';
+  nav.id = `fn-${carouselId}`;
+  nav.innerHTML = `
+    <button class="food-nav-btn" onclick="scrollFood('${carouselId}',-1,'fn-${carouselId}')" disabled>‹</button>
+    <div class="food-nav-dots">${dotsHtml}</div>
+    <button class="food-nav-btn" onclick="scrollFood('${carouselId}',1,'fn-${carouselId}')">›</button>
+  `;
+  wrap.appendChild(carousel);
+  wrap.appendChild(nav);
+  return wrap;
+}
+
+function createMiniAlbum(imgUrls, isGuide = false) {
+  const dotColorClass = isGuide ? 'green' : '';
+  const allUrls = imgUrls.map(u => u.trim()).filter(u => u);
+  if (!allUrls.length) return '';
+  const albumId = 'album-' + Math.random().toString(36).slice(2, 8);
+
+  const slidesHtml = allUrls.map((url, idx) => `
+    <div class="album-slide" data-album="${albumId}" data-idx="${idx}" style="cursor:zoom-in">
+      <img src="${url}" alt="景點細節" style="pointer-events:none" onerror="this.parentElement.style.background='#eee';this.style.display='none'">
+    </div>`).join('');
+
+  const dotsHtml = allUrls.map((_, idx) => `
+    <div class="album-dot ${dotColorClass} ${idx === 0 ? 'active' : ''}"></div>`).join('');
+
+  const label = isGuide ? '<div class="album-label green">🗺 導遊相簿</div>' : '';
+
+  setTimeout(() => {
+    document.querySelectorAll(`.album-slide[data-album="${albumId}"]`).forEach(el => {
+      el.addEventListener('click', () => openLightbox(allUrls, parseInt(el.dataset.idx)));
+    });
+  }, 0);
+
+  return `${label}<div class="album-scroll">${slidesHtml}</div><div class="album-dots">${dotsHtml}</div>`;
+}
+
+function openLightbox(urls, startIdx) {
+  let cur = startIdx;
+  const overlay = document.createElement('div');
+  overlay.id = 'lightbox';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px';
+  overlay.onclick = (e) => { if (e.target === overlay) closeLightbox(); };
+
+  function render() {
+    overlay.innerHTML = `
+      <button onclick="closeLightbox()" style="position:absolute;top:16px;right:20px;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;z-index:1">✕</button>
+      <div style="display:flex;align-items:center;gap:10px;width:100%;justify-content:center;padding:0 16px">
+        <button onclick="lbNav(-1)" style="background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:50%;width:38px;height:38px;font-size:20px;cursor:pointer;flex-shrink:0" ${cur===0?'disabled style="opacity:.3;cursor:default;background:rgba(255,255,255,.1)"':''}>‹</button>
+        <img src="${urls[cur]}" style="max-width:calc(100vw - 100px);max-height:75vh;border-radius:10px;object-fit:contain;display:block">
+        <button onclick="lbNav(1)" style="background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:50%;width:38px;height:38px;font-size:20px;cursor:pointer;flex-shrink:0" ${cur===urls.length-1?'disabled style="opacity:.3;cursor:default;background:rgba(255,255,255,.1)"':''}>›</button>
+      </div>
+      <div style="color:rgba(255,255,255,.6);font-size:13px">${cur+1} / ${urls.length}</div>`;
+  }
+
+  window.lbNav = (dir) => { cur = Math.max(0, Math.min(urls.length-1, cur+dir)); render(); };
+  render();
+  document.body.appendChild(overlay);
+}
+
+function closeLightbox() {
+  const lb = document.getElementById('lightbox');
+  if (lb) lb.remove();
+}
+
+function renderGuideBook(gbook) {
+  const container = document.getElementById('family-guide');
+  container.innerHTML = '';
+  const sections = {};
+  gbook.forEach(item => {
+    const t = item.gbook_title || '其他資訊';
+    if (!sections[t]) sections[t] = [];
+    sections[t].push(item);
+  });
+  for (const title in sections) {
+    const sec = document.createElement('div');
+    sec.className = 'guide-section';
+    sec.innerHTML = `<div class="guide-title">${title}</div>` +
+      sections[title].map(item => `
+        <div class="guide-item">
+          <span class="guide-item-icon">${item.gbook_subemoji || '📌'}</span>
+          <div><strong>${item.gbook_subtitle || ''}</strong>${item.gbook_text || ''}</div>
+        </div>`).join('');
+    container.appendChild(sec);
+  }
+}
+
+function renderTodoList(info, todo) {
+  const dayContainer = document.getElementById('todo-day-selector-container');
+  dayContainer.innerHTML = '';
+  info.forEach((item, idx) => {
+    const btn = document.createElement('button');
+    btn.className = `todo-day-btn ${idx === 0 ? 'active' : ''}`;
+    btn.onclick = (e) => switchTodoDay(item.Day, e.currentTarget);
+    btn.innerHTML = `Day ${item.Day}<br><span style="font-size:11px">9/${26+parseInt(item.Day)}</span>`;
+    dayContainer.appendChild(btn);
+  });
+
+  const panelContainer = document.getElementById('todo-panels-container');
+  panelContainer.innerHTML = '';
+  info.forEach((dayInfo, idx) => {
+    const panel = document.createElement('div');
+    panel.className = `todo-panel ${idx === 0 ? 'active' : ''}`;
+    panel.id = `todo-${dayInfo.Day}`;
+    const dayTodos = todo.filter(t => parseInt(t.todo_day) === parseInt(dayInfo.Day));
+    const itemsHtml = dayTodos.length === 0
+      ? `<div style="font-size:13px;color:#95C8A8;font-style:italic;text-align:center;padding:12px 0;">🎉 本日尚無規劃待辦事項！</div>`
+      : dayTodos.map(item => `
+          <div class="todo-item" onclick="toggleTodo(this)">
+            <div class="todo-check"></div>
+            <div class="todo-text">${item.todo_list || ''}</div>
+          </div>`).join('');
+    panel.innerHTML = `
+      <div class="todo-section">
+        <div class="todo-title">✅ Day ${dayInfo.Day} 待辦清單</div>
+        <div class="todo-progress">
+          <div class="todo-progress-bar"><div class="todo-progress-fill" style="width:0%"></div></div>
+          <span class="todo-progress-text">0 / ${dayTodos.length} 完成</span>
+        </div>
+        <div class="todo-items-list">${itemsHtml}</div>
+      </div>`;
+    panelContainer.appendChild(panel);
+    if (dayTodos.length > 0) {
+      const first = panel.querySelector('.todo-item');
+      if (first) toggleTodo(first, true);
+    }
+  });
+}
+
+// ── 工具函數 ──────────────────────────────────────
+function getCardTypeClass(c) {
+  if (!c) return 'type-sight';
+  if (c.includes('食')||c.includes('吃')||c.includes('餐')) return 'type-food';
+  if (c.includes('住')||c.includes('旅')) return 'type-hotel';
+  if (c.includes('行')||c.includes('交')) return 'type-transport';
+  if (c.includes('購')||c.includes('買')||c.includes('店')) return 'type-shop';
+  if (c.includes('動')||c.includes('活')||c.includes('藝')) return 'type-activity';
+  return 'type-sight';
+}
+function getCategoryBadgeClass(c) {
+  if (!c) return 'cat-sight';
+  if (c.includes('食')||c.includes('吃')||c.includes('餐')) return 'cat-food';
+  if (c.includes('住')||c.includes('旅')) return 'cat-hotel';
+  if (c.includes('行')||c.includes('交')) return 'cat-transport';
+  if (c.includes('購')||c.includes('買')||c.includes('店')) return 'cat-shop';
+  if (c.includes('動')||c.includes('活')||c.includes('藝')) return 'cat-activity';
+  return 'cat-sight';
+}
+function getTagStyleClass(t) {
+  if (!t) return '';
+  if (t.includes('吃')||t.includes('食')||t.includes('飲')) return 'tag-eat';
+  if (t.includes('買')||t.includes('購')||t.includes('禮')) return 'tag-buy';
+  if (t.includes('照')||t.includes('景')||t.includes('拍')) return 'tag-photo';
+  return 'tag-tip';
+}
+
+// ── WEATHER ──────────────────────────────────────
+const WMO_ICON={0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',53:'🌦',55:'🌧',61:'🌧',63:'🌧',65:'🌧',71:'🌨',73:'🌨',75:'❄️',80:'🌦',81:'🌧',82:'⛈',95:'⛈',96:'⛈',99:'⛈'};
+const WMO_DESC={0:'晴天',1:'大致晴',2:'部分多雲',3:'陰天',45:'有霧',51:'毛毛雨',61:'小雨',63:'中雨',65:'大雨',80:'陣雨',82:'強陣雨',95:'雷雨'};
+const TRIP_START=new Date('2026-09-27');
+const TRIP_END=new Date('2026-10-01');
+
+async function loadWeather(){
+  try{
+    const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=34.6617&longitude=133.9344&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTokyo&forecast_days=16');
+    renderWeather(await r.json());
+  }catch(e){
+    document.getElementById('weather-loading').style.display='none';
+    const el=document.getElementById('weather-error');
+    el.style.display='block';
+    el.textContent='⚠️ 天氣資料讀取失敗，請確認網路連線。';
+  }
+}
+
+function renderWeather(d){
+  document.getElementById('weather-loading').style.display='none';
+  document.getElementById('weather-main').style.display='block';
+  const c=d.current, code=c.weather_code;
+  document.getElementById('w-icon').textContent=WMO_ICON[code]||'🌡';
+  document.getElementById('w-temp').textContent=Math.round(c.temperature_2m)+'°C';
+  document.getElementById('w-desc').textContent=WMO_DESC[code]||'';
+  document.getElementById('w-hum').textContent=c.relative_humidity_2m+'%';
+  document.getElementById('w-wind').textContent=Math.round(c.wind_speed_10m)+' km/h';
+  document.getElementById('w-feel').textContent=Math.round(c.apparent_temperature)+'°C';
+  document.getElementById('w-rain').textContent=(c.precipitation_probability||0)+'%';
+  const today=new Date(); today.setHours(0,0,0,0);
+  const avail=d.daily.time.map((t,i)=>({date:new Date(t),i}));
+  const tripDays=avail.filter(x=>x.date>=TRIP_START&&x.date<=TRIP_END);
+  const showDays=tripDays.length>0?tripDays:avail.slice(0,7);
+  const noteEl=document.getElementById('w-note');
+  if(tripDays.length>0){
+    document.getElementById('w-forecast-title').textContent='📅 旅遊期間預報（9/27～10/1）';
+    noteEl.style.display='block';
+    noteEl.textContent='✅ 已顯示實際旅遊日期的天氣預報！';
+  }else{
+    document.getElementById('w-forecast-title').textContent='📅 近期天氣（旅遊日尚在預報範圍外）';
+    noteEl.style.display='block';
+    noteEl.textContent='ℹ️ 旅遊日 2026/9/27～10/1 尚未在預報範圍內，出發前 2 週再查可獲得準確預報！';
+  }
+  const wk=document.getElementById('w-week');
+  wk.innerHTML='';
+  showDays.forEach(({date,i})=>{
+    const isTripDay=date>=TRIP_START&&date<=TRIP_END;
+    const isToday=date.toDateString()===today.toDateString();
+    const md=(date.getMonth()+1)+'/'+(date.getDate());
+    const wd=['日','一','二','三','四','五','六'][date.getDay()];
+    const div=document.createElement('div');
+    div.className='week-item'+(isToday?' highlight':'');
+    if(isTripDay&&!isToday) div.style.cssText='background:#3B8080;color:#fff;border-radius:12px';
+    div.innerHTML=`<div class="wd">${md}<br>週${wd}</div><div class="wi">${WMO_ICON[d.daily.weather_code[i]]||'🌡'}</div><div class="wt">${Math.round(d.daily.temperature_2m_max[i])}°/${Math.round(d.daily.temperature_2m_min[i])}°</div>`;
+    wk.appendChild(div);
+  });
+}
+
+// ── MODE SWITCH ───────────────────────────────────
+let clickCount=0, clickTimer=null, isGuideMode=false;
+function handleIconClick(){
+  const icon=document.getElementById('headerIcon');
+  icon.classList.remove('clicked'); void icon.offsetWidth; icon.classList.add('clicked');
+  clickCount++; clearTimeout(clickTimer);
+  clickTimer=setTimeout(()=>{ clickCount=0; },2000);
+  if(clickCount>=5){ clickCount=0; clearTimeout(clickTimer); showModal(); }
+}
+function showModal(){
+  document.getElementById('modalIcon').textContent=isGuideMode?'👨‍👩‍👧':'🗺️';
+  document.getElementById('modalTitle').textContent=isGuideMode?'切換回家庭旅遊版？':'切換到導遊版本？';
+  document.getElementById('modalDesc').textContent=isGuideMode?'將隱藏導遊備註，切換回家人閱覽模式。':'導遊版本包含每日待辦清單與詳細備註，僅供帶路人使用。';
+  document.getElementById('modalConfirm').classList.toggle('to-family',isGuideMode);
+  document.getElementById('switchModal').classList.add('show');
+}
+function closeModal(){ document.getElementById('switchModal').classList.remove('show'); }
+function confirmSwitch(){
+  closeModal(); isGuideMode=!isGuideMode;
+  document.body.classList.toggle('guide-mode',isGuideMode);
+  document.getElementById('modeBadge').textContent=isGuideMode?'🗺️ 導遊專用版':'👨‍👩‍👧 家庭旅遊版';
+  document.getElementById('headerSubtitle').textContent=isGuideMode?'Guide Mode — 導遊專用':'Okayama Trip';
+  document.getElementById('family-guide').style.display=isGuideMode?'none':'block';
+  document.getElementById('guide-todo').style.display=isGuideMode?'block':'none';
+  document.getElementById('guideTabIcon').textContent=isGuideMode?'✅':'📖';
+  document.getElementById('guideTabLabel').textContent=isGuideMode?'待辦':'指南';
+}
+
+// ── TABS / DAYS ───────────────────────────────────
+function switchTab(tab){
+  document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.tab-item').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('nav-'+tab).classList.add('active');
+}
+function switchDay(day,btn){
+  document.querySelectorAll('.day-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.day-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('day-'+day).classList.add('active');
+}
+function switchTodoDay(day,btn){
+  document.querySelectorAll('.todo-day-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.todo-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('todo-'+day).classList.add('active');
+}
+
+function toggleMore(btn){
+  const card=btn.closest('.spot-card,.food-card');
+  const panel=card.querySelector('.more-panel');
+  const open=panel.classList.toggle('open');
+  btn.textContent=open?'📖 收起 ▴':'📖 了解更多 ▾';
+}
+function toggleGuide(btn){
+  const card=btn.closest('.spot-card,.food-card');
+  const panel=card.querySelector('.guide-panel');
+  const open=panel.classList.toggle('open');
+  btn.classList.toggle('active',open);
+  btn.textContent=open?'✕':'📋';
+}
+function toggleTodo(item, preventToggle=false){
+  if(!preventToggle) item.classList.toggle('done');
+  const sec=item.closest('.todo-section');
+  const all=sec.querySelectorAll('.todo-item').length;
+  const done=sec.querySelectorAll('.todo-item.done').length;
+  sec.querySelector('.todo-progress-fill').style.width=(all>0?done/all*100:0)+'%';
+  sec.querySelector('.todo-progress-text').textContent=done+' / '+all+' 完成';
+}
+function scrollFood(id,dir,navId){
+  const el=document.getElementById(id);
+  el.scrollBy({left:dir*(el.querySelector('.food-card').offsetWidth+12),behavior:'smooth'});
+}
+function syncFoodNav(el,navId){
+  const nav=document.getElementById(navId);
+  const cards=[...el.querySelectorAll('.food-card')];
+  if(!cards.length) return;
+  const idx=Math.round(el.scrollLeft/(cards[0].offsetWidth+12));
+  nav.querySelectorAll('.food-nav-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+  nav.querySelectorAll('.food-nav-btn')[0].disabled=idx===0;
+  nav.querySelectorAll('.food-nav-btn')[1].disabled=idx>=cards.length-1;
+}
+
+window.onload = function() { loadTripData(); }
+</script>
+</body>
+</html>
