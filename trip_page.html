@@ -83,8 +83,9 @@ body.guide-mode .time-badge{background:#E8F5EE;color:var(--guide)}
 .spot-card.type-hotel::before{background:#7B6CA8}
 .spot-card.type-transport::before{background:#B8B0A8}
 .card-img{width:100%;height:clamp(140px,30vw,200px);object-fit:cover;border-radius:10px;margin-bottom:10px;display:block}
-.spot-header{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;flex-wrap:wrap}
-.cat-badge{font-size:11px;font-weight:700;border-radius:10px;padding:4px 10px;flex-shrink:0;margin-top:2px}
+.spot-header{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;flex-wrap:nowrap}
+.spot-header-left{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0}
+.cat-badge{font-size:11px;font-weight:700;border-radius:10px;padding:4px 10px;align-self:flex-start}
 .cat-food{background:#FFF0E6;color:#C06020}
 .cat-sight{background:#E8F0F8;color:#1a5080}
 .cat-shop{background:#FCEEF0;color:#B04060}
@@ -562,16 +563,11 @@ function createMultiValueCarousel(item) {
     card.innerHTML = `
       ${imgHtml}
       <div class="spot-header">
-        ${catBadgeHtml}
-        <span class="spot-name">${titleI}</span>
+        <div class="spot-header-left">${catBadgeHtml}<span class="spot-name">${titleI}</span></div>
         <div class="spot-header-btns">${guideBtnHtml}</div>
       </div>
       ${descHtml(descI)}
-      ${tagsHtml}
-      ${tipsHtml}
-      ${moreLinkHtml}
-      ${guidePanelHtml}
-      ${mapBtnHtml}`;
+      ${tagsHtml}${tipsHtml}${moreLinkHtml}${guidePanelHtml}${mapBtnHtml}`;
 
     slide.appendChild(card);
     carousel.appendChild(slide);
@@ -714,7 +710,10 @@ function createSpotCard(item) {
   const mapBtnHtml = (item.map_url && item.map_url.trim()) ? `<a class="map-btn" href="${item.map_url}" target="_blank">🗺 Google Maps 導航</a>` : '';
   card.innerHTML = `
     ${imgHtml}
-    <div class="spot-header">${catBadgeHtml}<span class="spot-name">${item.spot_title || ''}</span><div class="spot-header-btns">${guideBtnHtml}</div></div>
+    <div class="spot-header">
+      <div class="spot-header-left">${catBadgeHtml}<span class="spot-name">${item.spot_title || ''}</span></div>
+      <div class="spot-header-btns">${guideBtnHtml}</div>
+    </div>
     ${descHtml(item.description)}
     ${tagsHtml}${tipsHtml}${moreLinkHtml}${guidePanelHtml}${mapBtnHtml}`;
   return card;
