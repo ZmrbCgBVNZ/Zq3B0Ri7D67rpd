@@ -362,12 +362,12 @@ async function fetchAndCache(silent) {
 
 function renderAll(data) {
   cachedTripData = data;
-  renderDaySelector(data.info);
-  renderItinerary(data.info, data.tour);
+  const defaultIdx = renderDaySelector(data.info);
+  renderItinerary(data.info, data.tour, defaultIdx);
   renderGuideBook(data.gbook);
   renderTodoList(data.info, data.todo);
   renderDailyGuide(data.daily || []);
-  loadWeather(); // 天氣只在這裡呼叫一次
+  loadWeather();
 }
 
 function retryConnection() {
@@ -395,24 +395,35 @@ function cardImgHtml(url, title, cssClass, height) {
 function renderDaySelector(info) {
   const c = document.getElementById('day-selector-container');
   c.innerHTML = '';
+
+  const now = new Date();
+  const todayStr = `${now.getMonth()+1}/${now.getDate()}`;
+  let defaultIdx = 0;
+  info.forEach((item, idx) => {
+    if ((item.info_date || '').trim() === todayStr) defaultIdx = idx;
+  });
+
   info.forEach((item, idx) => {
     const dm = item.Daytext ? item.Daytext.match(/(\d+\/\d+)/) : null;
     const ds = dm ? dm[0] : '';
     const btn = document.createElement('button');
-    btn.className = `day-btn ${idx===0?'active':''}`;
+    btn.className = `day-btn ${idx === defaultIdx ? 'active' : ''}`;
     btn.onclick = e => switchDay(item.Day, e.currentTarget);
     btn.innerHTML = `Day ${item.Day}<br><span style="font-size:11px">${ds}</span>`;
     c.appendChild(btn);
   });
+
+  // 回傳 defaultIdx 供 renderItinerary 使用
+  return defaultIdx;
 }
 
 // ── ITINERARY ─────────────────────────────────────
-function renderItinerary(info, tour) {
+function renderItinerary(info, tour, defaultIdx = 0) {
   const container = document.getElementById('day-panels-container');
   container.innerHTML = '';
   info.forEach((dayInfo, idx) => {
     const panel = document.createElement('div');
-    panel.className = `day-panel ${idx===0?'active':''}`;
+    panel.className = `day-panel${idx === defaultIdx ? ' active' : ''}`;
     panel.id = `day-${dayInfo.Day}`;
     panel.innerHTML = `
       <div class="day-header">
