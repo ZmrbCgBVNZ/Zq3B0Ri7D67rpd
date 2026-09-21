@@ -596,6 +596,11 @@ function openLightbox(urls,startIdx){
 }
 function closeLightbox(){const lb=document.getElementById('lightbox');if(lb)lb.remove();}
 
+// 自動把文字中的 URL 轉成可點選連結
+function linkify(text) {
+  return text.replace(/(https?:\/\/[^\s，。、）\)]+)/g, '<a href="$1" target="_blank" style="color:var(--fuji);word-break:break-all;text-decoration:underline;text-underline-offset:3px">$1</a>');
+}
+
 // ── GUIDE BOOK ────────────────────────────────────
 function renderGuideBook(gbook) {
   const container=document.getElementById('family-guide'); container.innerHTML='';
@@ -603,7 +608,7 @@ function renderGuideBook(gbook) {
   gbook.forEach(item=>{const t=item.gbook_title||'其他資訊';if(!sections[t])sections[t]=[];sections[t].push(item);});
   for(const title in sections){
     const sec=document.createElement('div'); sec.className='guide-section';
-    sec.innerHTML=`<div class="guide-title">${title}</div>`+sections[title].map(item=>`<div class="guide-item"><span class="guide-item-icon">${item.gbook_subemoji||'📌'}</span><div><strong>${item.gbook_subtitle||''}</strong><span class="guide-item-text">${item.gbook_text||''}</span></div></div>`).join('');
+    sec.innerHTML=`<div class="guide-title">${title}</div>`+sections[title].map(item=>        `<div class="guide-item"><span class="guide-item-icon">${item.gbook_subemoji||'📌'}</span><div><strong>${item.gbook_subtitle||''}</strong><span class="guide-item-text">${linkify(item.gbook_text||'')}</span></div></div>`).join('');
     container.appendChild(sec);
   }
 }
